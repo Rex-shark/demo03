@@ -3,9 +3,9 @@ package com.example.demoservice.service.impl;
 import com.example.demoservice.model.UserBase;
 import com.example.demoservice.service.LoginService;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
-import com.example.demoservice.repository.UserBaseRepository;
+import com.example.demoservice.repository.IUserBaseRepository;
 
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 public class LoginServiceImpl implements LoginService {
 
     @Resource
-    UserBaseRepository userBaseRepo;
+    IUserBaseRepository userBaseRepo;
 
     @Override
     public void test(String msg) {
