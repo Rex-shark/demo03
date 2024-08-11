@@ -2,6 +2,7 @@ package com.example.demoservice.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.Date;
 
@@ -13,11 +14,19 @@ public class UserBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(columnDefinition = " varchar(100) COMMENT '登入帳號'")
     private String account;
 
-    @Column(nullable = false, length = 255)
+    @Column(columnDefinition = " varchar(100) COMMENT '登入密碼'")
     private String password;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    private Date lastLogin;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    private Date lastLogout;
 
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Date createdAt;

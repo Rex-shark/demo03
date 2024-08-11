@@ -2,10 +2,12 @@ package com.example.demoapi.contorller;
 
 import com.example.demoapi.request.LoginRequest;
 import com.example.demoapi.response.WebResponse;
+import com.example.demoservice.model.SysMenu;
+import com.example.demoservice.repository.ISysMenuRepo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demoservice.service.LoginService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/hello")
@@ -24,8 +28,11 @@ public class HelloController {
     @Resource
     LoginService loginService;
 
+    @Resource
+    ISysMenuRepo sysMenuRepo;
+
     /**
-     * Rex 測試用
+     * Rex 胡亂功能測試用
      * @param request
      * @param httpRequest
      * @return
@@ -37,6 +44,9 @@ public class HelloController {
         System.out.println("httpRequest.getRemoteAddr() = " + httpRequest.getRemoteAddr());
         System.out.println("Account = "+ request.getAccount());
         loginService.test(request.getAccount());
+        String account ="a";
+        String platformName ="b";
+        List<SysMenu> sysMenuList = sysMenuRepo.findUserMenuList(account,platformName);
         String message = "test ok "+ request.getAccount();
 
         return new ResponseEntity<>(new WebResponse(
