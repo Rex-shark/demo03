@@ -14,7 +14,7 @@ public class UserBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = " varchar(100) COMMENT '登入帳號'")
+    @Column(columnDefinition = "varchar(100) COMMENT '登入帳號'", unique = true)
     private String account;
 
     @Column(columnDefinition = " varchar(100) COMMENT '登入密碼'")
