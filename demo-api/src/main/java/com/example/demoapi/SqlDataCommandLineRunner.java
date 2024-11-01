@@ -1,10 +1,13 @@
 package com.example.demoapi;
 
+import com.example.demoservice.model.OrderDemo01;
 import com.example.demoservice.model.UserBase;
+import com.example.demoservice.repository.IOrderDemo01;
 import com.example.demoservice.repository.IUserBaseRepository;
 import com.example.demoservice.util.PasswordUtil;
 import jakarta.annotation.Resource;
 import org.apache.catalina.User;
+import org.hibernate.query.Order;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Component;
@@ -17,6 +20,9 @@ public class SqlDataCommandLineRunner implements CommandLineRunner {
 
     @Resource
     private IUserBaseRepository userBaseRepository;
+
+    @Resource
+    private IOrderDemo01 orderDemo01;
 
     /**
      * 目前測試 spring.sql.init.mode=always + data.sql
@@ -37,5 +43,11 @@ public class SqlDataCommandLineRunner implements CommandLineRunner {
             userBase.setPassword(PasswordUtil.hashWithMD5("123456"));
             userBaseRepository.save(userBase);
         }
+
+        System.out.println( "SqlDataCommandLineRunner Run! auto insert order... ");
+        OrderDemo01 od = new OrderDemo01();
+        od.setOrderName("AA");
+        od.setStatus(1);
+        orderDemo01.save(od);
     }
 }
