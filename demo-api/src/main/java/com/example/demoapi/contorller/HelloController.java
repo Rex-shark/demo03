@@ -4,6 +4,10 @@ import com.example.demoapi.request.LoginRequest;
 import com.example.demoapi.response.WebResponse;
 import com.example.demoservice.model.SysMenu;
 import com.example.demoservice.repository.ISysMenuRepo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -39,6 +43,24 @@ public class HelloController {
      * @throws Exception
      */
     @PostMapping("rex")
+    @Operation(
+            description = "登入",
+            responses = {
+                    @ApiResponse(responseCode = "500", ref = "internalServerError"),
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "登入",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    examples = {
+                                            @ExampleObject(
+                                                    value = "{\"code\" : 200, \"status\" : \"ok\", \"message\" : \"成功登入\"}"
+                                            )
+                                    }
+                            )
+                    )
+            }
+    )
     public ResponseEntity<?> rex(@Valid @RequestBody LoginRequest request , HttpServletRequest httpRequest
     ) throws Exception {
         System.out.println("httpRequest.getRemoteAddr() = " + httpRequest.getRemoteAddr());

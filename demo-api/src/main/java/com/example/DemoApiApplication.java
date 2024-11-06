@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class DemoApiApplication {
 
     public static void main(String[] args) {
-        System.out.println("Demo api run");
+        System.out.println("Demo api run b");
         SpringApplication.run(DemoApiApplication.class, args);
     }
 
