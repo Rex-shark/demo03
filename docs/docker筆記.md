@@ -1,31 +1,34 @@
 
-### 啟動docker容器指令 持久化路徑放D槽版本 適用windows
+### mysql 啟動docker容器指令 持久化路徑放在D槽地版本 適用windows
 
+- docker run -itd --name mysql8_docker -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -v /d/mydata:/var/lib/mysql mysql:8.0
 
-docker run -itd --name mysql8_docker -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -v /d/mydata:/var/lib/mysql mysql:8.0
+### mysql 啟動docker容器指令 持久化路徑放在~/mydata 適用nac
+
+- docker run -itd --name mysql8_docker -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -v ~/mydata:/var/lib/mysql mysql:8.0
 
 ---
 
-docker run
-啟動並執行一個新的 Docker 容器。
+### 查docker內MySQL或redis的ip
 
--itd
-多個參數的組合：
+1. 先用 docker ps 查出容器名稱與Id
+2. inspect -f "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" 容器名稱或Id 
 
--i：讓容器進入互動模式（允許輸入資料）。
--t：分配一個虛擬終端（TTY），模擬終端介面。
--d：讓容器在背景執行。
---name mysql8_docker
-指定容器名稱為 mysql8_docker，方便管理和辨識此容器。
+---
 
--e MYSQL_ROOT_PASSWORD=123456
-設置環境變數 MYSQL_ROOT_PASSWORD，用來設定 MySQL root 使用者的密碼為 123456。
+### 建立redis鏡像
 
--p 3306:3306
-將容器內的 3306 端口映射到主機的 3306 端口，使得主機能透過 localhost:3306 連線到容器內的 MySQL。
+1. docker pull redis:latest
+2. docker run --name my-redis -d redis:latest
+3. docker run --name my-redis -d -p 6379:6379 -e REDIS_PASSWORD=123456 redis:latest
 
--v /d/mydata:/var/lib/mysql
-將主機的 /d/mydata 目錄掛載到容器內的 /var/lib/mysql，這是 MySQL 的資料存儲路徑。這樣即使容器停止或刪除，MySQL 資料庫的數據依然會保留在主機的 D:\mydata 資料夾中。
+---
 
-mysql:8.0
-指定 MySQL 映像的版本，這裡使用的是 8.0 版本。
+### 建立oracle鏡像
+
+1. 下載鏡像 :  docker pull container-registry.oracle.com/database/express:latest
+2. run container : docker container create -it --name oracle-test  -p 1521:1521  -e ORACLE_PWD=123456  container-registry.oracle.com/database/express:latest
+
+---
+
+###  建立 PostgreSQL鏡像
