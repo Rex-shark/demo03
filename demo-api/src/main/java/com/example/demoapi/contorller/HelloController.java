@@ -1,11 +1,17 @@
 package com.example.demoapi.contorller;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.demoapi.config.TestConfig;
+
 import com.example.demoapi.request.LoginRequest;
 import com.example.demoapi.response.WebResponse;
-import com.example.demoservice.model.SysMenu;
-import com.example.demoservice.repository.ISysMenuRepo;
-import com.fasterxml.jackson.databind.util.BeanUtil;
-import com.fasterxml.jackson.databind.util.JSONPObject;
+
+import com.example.demoapi.utils.JWTUtils;
+import com.example.demoservice.entity.SysMenu;
+
+import com.example.demoservice.entity.UserBase;
+import com.example.demoservice.repository.ISysMenuRepository;
+import com.example.demoservice.repository.IUserBaseRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,29 +22,40 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demoservice.service.LoginService;
+import com.example.demoservice.service.AuthService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 
+@Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
-@RequestMapping("/api/hello")
+@RequestMapping("/hello")
 public class HelloController {
 
     @Resource
-    LoginService loginService;
+    AuthService authService;
 
     @Resource
-    ISysMenuRepo sysMenuRepo;
+    ISysMenuRepository sysMenuRepo;
+
+    @Resource
+    TestConfig testConfig;
+
+    @Resource
+    JWTUtils jwtUtils;
+
+    @Resource
+    IUserBaseRepository userBaseRepository;
 
     /**
      * Rex 胡亂功能測試用
@@ -70,16 +87,22 @@ public class HelloController {
     ) throws Exception {
         System.out.println("httpRequest.getRemoteAddr() = " + httpRequest.getRemoteAddr());
         System.out.println("Account = "+ request.getAccount());
-        loginService.test(request.getAccount());
-        String account ="a";
-        String platformName ="b";
-        List<SysMenu> sysMenuList = sysMenuRepo.findUserMenuList(account,platformName);
-        String message = "test ok "+ request.getAccount();
+        System.out.println("testConfig.getTestName() = " + testConfig.getTestName());
+        log.info("aaa");
+
+        authService.test(request.getAccount());
+        String account = request.getAccount();
+        String platformName ="demo";
+//        List<SysMenu> sysMenuList = sysMenuRepo.findUserMenuList(account,platformName);
+//        for (SysMenu sysMenu : sysMenuList) {
+//            System.out.println("sysMenu.getMenuName() = " + sysMenu.getMenuName());
+//        }
+//        String message = "test ok "+ request.getAccount();
 
         return new ResponseEntity<>(new WebResponse(
                 HttpStatus.OK.value(),
                 HttpStatus.OK.getReasonPhrase(),
-                message
+                "message"
         ), HttpStatus.OK);
     }
 
@@ -99,6 +122,11 @@ public class HelloController {
 
         String msg = "getDemo1 , account = " + account + " ,password = " + password;
         System.out.println("msg = " + msg);
+        Optional<UserBase> user = userBaseRepository.findById(1L);
+
+
+        // 刪除用戶，JPA 自動刪除關聯數據
+        userBaseRepository.delete(user.get());
 
         return new ResponseEntity<>(new WebResponse(
                 HttpStatus.OK.value(),
@@ -206,5 +234,58 @@ public class HelloController {
     public String  getNg3() throws Exception {
         System.out.println("333");
         return "OKOKOKOK" ;
+    }
+
+
+    @PostMapping("p/jwt")
+    public ResponseEntity<?> postJwt(@ModelAttribute LoginRequest loginRequest
+    ,@RequestHeader("Authorization") String authHeader) throws Exception {
+        System.out.println("postJwt authHeader = " + authHeader);
+
+        try {
+            String token = jwtUtils.extractToken(authHeader);
+            System.out.println("token = " + token);
+            DecodedJWT jwt = jwtUtils.validateToken(token);
+            String account = jwt.getClaim("account").asString();
+            System.out.println("account = " + account);
+
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(new WebResponse(
+                    HttpStatus.UNAUTHORIZED.value(),
+                    HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                    e.getMessage()
+            ), HttpStatus.UNAUTHORIZED);
+        }
+
+        return new ResponseEntity<>(new WebResponse(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.getReasonPhrase(),
+                "msg"
+        ), HttpStatus.OK);
+    }
+
+
+    @GetMapping("g/delete-user")
+    @ResponseBody
+    public ResponseEntity  deleteUser(@RequestParam("account") String account) throws Exception {
+        System.out.println("account = " + account);
+        Optional<UserBase> userBaseOptional =  userBaseRepository.findByAccount(account);
+
+        if(userBaseOptional.isEmpty()){
+            return new ResponseEntity<>(new WebResponse(
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                    "刪除失敗"
+            ), HttpStatus.BAD_REQUEST);
+        }
+
+        // 刪除用戶，JPA 自動刪除關聯數據
+        userBaseRepository.delete(userBaseOptional.get());
+
+        return new ResponseEntity<>(new WebResponse(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.getReasonPhrase(),
+                "刪除成功"
+        ), HttpStatus.OK);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.demoapi;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.example.demoapi.response.WebResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -21,11 +22,12 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    //TODO Exception攔截器範例 目前還沒決定 要攔截什麼Exception
+//    //TODO Exception攔截器範例 目前還沒決定 要攔截什麼Exception
 //    @ExceptionHandler(HttpMessageNotReadableException.class)
 //    @ResponseStatus(HttpStatus.BAD_REQUEST)
 //    public ResponseEntity<?> handleIllegalArgumentException(HttpMessageNotReadableException ex
 //            , HandlerMethod handlerMethod) {
+//        //TokenExpiredException
 //        System.out.println("A handleIllegalArgumentException 測試中");
 //        System.out.println("handlerMethod.getClass().getName() = " + handlerMethod.getClass().getName());
 //        System.out.println("handlerMethod.getMethod().getClass() = " + handlerMethod.getMethod().getClass());
@@ -35,7 +37,7 @@ public class GlobalExceptionHandler {
 //        return new ResponseEntity<>(new WebResponse(
 //                HttpStatus.BAD_REQUEST.value(),
 //                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-//                "Rex test aabbcc"
+//                "test"
 //        ), HttpStatus.BAD_REQUEST);
 //    }
 
@@ -62,4 +64,13 @@ public class GlobalExceptionHandler {
         ), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(TokenExpiredException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED) // HTTP 401 未授權
+    public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException ex, HandlerMethod handlerMethod) {
+        return new ResponseEntity<>(new WebResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                "JWT token is expired"
+        ), HttpStatus.UNAUTHORIZED);
+    }
 }

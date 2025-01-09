@@ -1,9 +1,10 @@
 package com.example.demoservice.repository;
 
-import com.example.demoservice.model.OrderDemo01;
+import com.example.demoservice.entity.SysRoleMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IOrderDemo01 extends JpaRepository<OrderDemo01,Long> {
+public interface ISysRoleMenuRepository extends JpaRepository<SysRoleMenu,Long> {
+
 }

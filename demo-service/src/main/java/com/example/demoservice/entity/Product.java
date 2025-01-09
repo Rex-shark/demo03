@@ -1,35 +1,28 @@
-package com.example.demoservice.model;
+package com.example.demoservice.entity;
+
+
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 
 import java.util.Date;
-import java.util.UUID;
 
-
-@Entity
-@Table(name = "order_demo01")
 @Data
-@EntityListeners(AuditingEntityListener.class)
-public class OrderDemo01 {
-
+@Entity(name = "Product")
+@Table(name = "product")
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(updatable = false, nullable = false, length = 36, unique = true)
-    private String uuid;
-
     @Column(nullable = false, length = 200)
-    private String orderName;  // 訂單名稱
+    private String name;
 
     @Column(nullable = false)
-    private Integer status;  // 狀態
+    private String description;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
@@ -40,9 +33,4 @@ public class OrderDemo01 {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private Date updatedAt;
-
-    @PrePersist
-    private void generateId() {
-        this.uuid = UUID.randomUUID().toString();
-    }
 }

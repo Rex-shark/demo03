@@ -1,0 +1,46 @@
+###rex
+POST http://localhost:8080/api/hello/rex
+Content-Type: application/json
+
+{
+  "account": "admin",
+  "password": "123456"
+}
+
+###login 取得token
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "account": "admin",
+  "password": "123456",
+  "code": "1234"
+}
+
+
+
+###
+POST http://localhost:8080/api/hello/p/jwt
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJyb2xlcyI6WyJBRE1JTiJdLCJleHAiOjE3MzYzMDkzMjEsImlzcyI6ImRlbW8tYXBpIiwiaWF0IjoxNzM2MzAyMTIxfQ.FigVQLYYRymTFeqQaSeXgl7ohZDwoAOvk56r8clCfp8
+
+{
+  "username": "admin"
+}
+
+
+
+###
+POST http://localhost:8080/auth/refresh
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJleHAiOjE3MzYyMjA5NzksImlzcyI6ImRlbW8tYXBpIiwiaWF0IjoxNzM2MjIwMzc5fQ.Yt-1FTBIAdXxBjgjKPuiRXjtd6_3EAetGaVad9_JuIQ
+cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJleHAiOjE3MzYyMjIxNzksImlzcyI6ImRlbW8tYXBpIiwiaWF0IjoxNzM2MjIwMzc5fQ._HixG_vBqw26OON6FrWV3t5t95rGeTGuL9EH_2MqniY
+
+{
+  "account": "admin"
+}
+
+
+###
+GET http://localhost:8080/hello/g/delete-user?
+    account=admin

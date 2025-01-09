@@ -1,10 +1,9 @@
-package com.example.demoservice.model;
+package com.example.demoservice.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity(name = "SysMenu")
@@ -13,6 +12,9 @@ public class SysMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(columnDefinition = " varchar(255) COMMENT '唯一標示'")
+    private String nid;
 
     @Column(columnDefinition = " varchar(255) COMMENT '菜單名稱'")
     private String menuName;
@@ -39,10 +41,10 @@ public class SysMenu {
     private Integer status;
 
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     private Long createdUserId;
 

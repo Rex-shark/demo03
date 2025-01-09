@@ -1,28 +1,22 @@
 package com.example.demoapi;
 
-import com.example.demoservice.model.OrderDemo01;
-import com.example.demoservice.model.UserBase;
-import com.example.demoservice.repository.IOrderDemo01;
 import com.example.demoservice.repository.IUserBaseRepository;
-import com.example.demoservice.util.PasswordUtil;
+import com.example.demoservice.service.SysService;
 import jakarta.annotation.Resource;
-import org.apache.catalina.User;
-import org.hibernate.query.Order;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 
 @Component
 public class SqlDataCommandLineRunner implements CommandLineRunner {
 
-    @Resource
-    private IUserBaseRepository userBaseRepository;
+
 
     @Resource
-    private IOrderDemo01 orderDemo01;
+    private SysService sysService;
+
+
 
     /**
      * 目前測試 spring.sql.init.mode=always + data.sql
@@ -36,18 +30,14 @@ public class SqlDataCommandLineRunner implements CommandLineRunner {
     public void run(String... args) {
 
         System.out.println( "SqlDataCommandLineRunner Run! auto insert ... ");
-
-        if (userBaseRepository.findByAccount("rex").isEmpty()) {
-            UserBase userBase = new UserBase();
-            userBase.setAccount("rex");
-            userBase.setPassword(PasswordUtil.hashWithMD5("123456"));
-            userBaseRepository.save(userBase);
-        }
+        //sysService.initUser();
+        sysService.initUser2();
+        //System.out.println("passwordEncoder= " + passwordEncoder.encode("aa"));
 
         System.out.println( "SqlDataCommandLineRunner Run! auto insert order... ");
-        OrderDemo01 od = new OrderDemo01();
-        od.setOrderName("AA");
-        od.setStatus(1);
-        orderDemo01.save(od);
+//        OrderDemo01 od = new OrderDemo01();
+//        od.setOrderName("AA");
+//        od.setStatus(1);
+//        orderDemo01.save(od);
     }
 }

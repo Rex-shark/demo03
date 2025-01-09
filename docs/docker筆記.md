@@ -32,3 +32,16 @@
 ---
 
 ###  建立 PostgreSQL鏡像
+
+
+---
+
+###  建立Java image 將jar與dockerfile放置同資料夾
+- docker build -t image名稱 .
+- docker build -t test-api-i .
+
+---
+
+###  建立Java container (~路徑應該是MAC版，待確認)
+- docker run -d -p {網址要連的port}:{application.properties指定的port} --name {container名稱} -v {~/tmp4log:/springboot} {image名稱}
+- docker run -d -p 8030:8030 --name test-api-c -v ~/tmp4log:/app/springboot test-api-i

@@ -1,0 +1,30 @@
+### 查訂單
+GET http://localhost:8080/order
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNjQ2NTE2MywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2MzkzMTYzfQ.TlYgtwm3CzV9-BPvxQGe_TZBKwTCPQyYGU8RyC0tzrU
+
+
+###新增order
+POST http://localhost:8080/order
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNjQ2NTcxOCwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2MzkzNzE4fQ.eEcSU5UXtswGga8pERcXikSH1W3H03bR9RP4JvYSCoA
+
+{
+  "orderName": "訂單3"
+}
+
+
+###改訂單
+PUT http://localhost:8080/order/63c281a1-d4ff-40a6-8ce6-8727fb1923b5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNjQ2NTcxOCwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2MzkzNzE4fQ.eEcSU5UXtswGga8pERcXikSH1W3H03bR9RP4JvYSCoA
+
+{
+  "uuid": "63c281a1-d4ff-40a6-8ce6-8727fb1923b5",
+  "orderName": "{{$random.alphanumeric(8)}}"
+}
+
+###刪除訂單
+DELETE http://localhost:8080/order/b9077fc6-871c-4b01-aef8-4c3dfb78ae3a
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNjQ2NTcxOCwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2MzkzNzE4fQ.eEcSU5UXtswGga8pERcXikSH1W3H03bR9RP4JvYSCoA

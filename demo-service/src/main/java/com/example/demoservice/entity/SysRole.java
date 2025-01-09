@@ -1,10 +1,11 @@
-package com.example.demoservice.model;
+package com.example.demoservice.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity(name = "SysRole")
@@ -27,13 +28,16 @@ public class SysRole {
     private Integer status;
 
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     private Long createdUserId;
 
     @Column(name = "update_user_id")
     private Long updateUserId;
+
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    private Set<UserBase> users = new HashSet<>(); // 具有該角色的用戶集合
 }

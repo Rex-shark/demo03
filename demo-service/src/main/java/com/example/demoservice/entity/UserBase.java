@@ -1,10 +1,12 @@
-package com.example.demoservice.model;
+package com.example.demoservice.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_base")
@@ -22,15 +24,24 @@ public class UserBase {
 
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    private Date lastLogin;
+    private LocalDateTime lastLogin;
 
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
-    private Date lastLogout;
+    private LocalDateTime lastLogout;
 
     @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "sys_user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<SysRole> roles = new HashSet<>();
 }
