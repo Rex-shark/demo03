@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.example.demoservice.entity.UserBase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ public class JWTUtils {
     private String issuer;
 
 
-    public  String generateToken(String account,Long userBaseId,int minute) {
+    public  String generateToken(String account,Long userBaseId,int minute,ArrayList<String> roles) {
         String token = "";
         //時效minute分鐘
         LocalDateTime dateTime = LocalDateTime.now().plusMinutes(minute);
@@ -38,6 +39,24 @@ public class JWTUtils {
         token = JWT.create()
                 .withClaim("account", account)
                 .withClaim("num", userBaseId)
+                .withClaim("roles", list)
+                .withExpiresAt(expireTime)
+                .withIssuer(issuer)
+                .withIssuedAt(Instant.now())
+                .sign(algorithm);
+        return token;
+    }
+
+    public  String generateToken(UserBase userBase, int minute, ArrayList<String> roles) {
+        String token = "";
+        //時效minute分鐘
+        LocalDateTime dateTime = LocalDateTime.now().plusMinutes(minute);
+        Date expireTime = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+        ArrayList<String> list = new ArrayList();
+        list.add("ADMIN");
+        token = JWT.create()
+                .withClaim("account", userBase.getAccount())
+                .withClaim("num", userBase.getId())
                 .withClaim("roles", list)
                 .withExpiresAt(expireTime)
                 .withIssuer(issuer)

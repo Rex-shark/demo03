@@ -1,10 +1,8 @@
 package com.example.demoapi;
 
-import com.example.demoservice.repository.IUserBaseRepository;
-import com.example.demoservice.service.SysService;
+import com.example.demoservice.service.ISysService;
 import jakarta.annotation.Resource;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 
@@ -14,7 +12,7 @@ public class SqlDataCommandLineRunner implements CommandLineRunner {
 
 
     @Resource
-    private SysService sysService;
+    private ISysService ISysService;
 
 
 
@@ -31,13 +29,12 @@ public class SqlDataCommandLineRunner implements CommandLineRunner {
 
         System.out.println( "SqlDataCommandLineRunner Run! auto insert ... ");
         //sysService.initUser();
-        sysService.initUser2();
+        ISysService.iniSysRole();
+        ISysService.initUser();
+        ISysService.initSysMenu();
+        ISysService.initSysRoleMenu();
         //System.out.println("passwordEncoder= " + passwordEncoder.encode("aa"));
 
-        System.out.println( "SqlDataCommandLineRunner Run! auto insert order... ");
-//        OrderDemo01 od = new OrderDemo01();
-//        od.setOrderName("AA");
-//        od.setStatus(1);
-//        orderDemo01.save(od);
+
     }
 }

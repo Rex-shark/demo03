@@ -47,8 +47,10 @@ public class OrderDemoService {
     // 更新訂單
     public OrderDemo updateOrderByUuid(String uuid, OrderDemo orderDemo) throws IllegalAccessException {
         System.out.println("orderDemo.getOrderName() = " + orderDemo.getOrderName());
+        System.out.println("uuid = " + uuid);
         Optional<OrderDemo> orderDemoOptional = orderDemoRepository.findByUuid(uuid);
         if (orderDemoOptional.isEmpty()) {
+            System.out.println("updateOrderByUuid " );
             return null;  // 或可以拋出自定義異常
         }
         OrderDemo oldOrder = orderDemoOptional.get();
@@ -76,7 +78,6 @@ public class OrderDemoService {
 
     // 刪除訂單
     public void deleteOrderByUuid(String uuid) {
-        Optional<OrderDemo> orderDemoOptional = orderDemoRepository.findByUuid(uuid);
-        orderDemoOptional.ifPresent(orderDemo -> orderDemoRepository.deleteById(orderDemo.getId()));
+
     }
 }

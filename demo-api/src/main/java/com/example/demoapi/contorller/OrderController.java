@@ -3,6 +3,7 @@ package com.example.demoapi.contorller;
 import com.example.demoservice.entity.OrderDemo;
 import com.example.demoservice.service.service.OrderDemoService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,9 @@ public class OrderController {
     public ResponseEntity<List<OrderDemo>> getAllOrders() {
         System.out.println("查詢所有訂單");
         List<OrderDemo> orders = orderDemoService.getAllOrders();
+        for (OrderDemo order : orders) {
+            System.out.println("orders.get(i).getCreatedAt() = " + order.getCreatedAt());
+        }
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
@@ -47,7 +51,7 @@ public class OrderController {
 
     // 更新訂單
     @PutMapping("/{uuid}")
-    public ResponseEntity<OrderDemo> updateOrder(@PathVariable String uuid, @RequestBody OrderDemo orderDemo) throws IllegalAccessException {
+    public ResponseEntity<OrderDemo> updateOrder(@PathVariable String uuid, @Valid @RequestBody OrderDemo orderDemo) throws IllegalAccessException {
         System.out.println("更新訂單 uuid = " + uuid);
         OrderDemo updatedOrder = orderDemoService.updateOrderByUuid(uuid, orderDemo);
         return updatedOrder != null ?

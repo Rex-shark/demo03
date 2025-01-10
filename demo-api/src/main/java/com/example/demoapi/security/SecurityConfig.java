@@ -26,7 +26,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-        //不知道要幹嘛，但是教學範例有
+        //不知道要幹嘛，但是教學範例有，
         MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/");
 
         http.csrf(csrf->csrf.disable())
@@ -34,7 +34,8 @@ public class SecurityConfig {
                         auth.requestMatchers(
                                         "/error/**",
                                         "/auth/**",
-                                        "/hello/**"
+                                        "/hello/**",
+                                        "/test/**"
                                 ).permitAll()
                                 .requestMatchers("/api/**").hasRole("ADMIN") // 設定 /api/** 需要 ADMIN 權限
                                 // 其他路徑需要認證

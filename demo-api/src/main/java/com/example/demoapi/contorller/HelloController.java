@@ -9,8 +9,12 @@ import com.example.demoapi.response.WebResponse;
 import com.example.demoapi.utils.JWTUtils;
 import com.example.demoservice.entity.SysMenu;
 
+import com.example.demoservice.entity.SysRole;
+import com.example.demoservice.entity.SysRoleMenu;
 import com.example.demoservice.entity.UserBase;
 import com.example.demoservice.repository.ISysMenuRepository;
+import com.example.demoservice.repository.ISysRoleMenuRepository;
+import com.example.demoservice.repository.ISysRoleRepository;
 import com.example.demoservice.repository.IUserBaseRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -28,7 +32,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demoservice.service.AuthService;
+
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,12 +45,14 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/hello")
 public class HelloController {
+    @Resource
+    private ISysRoleRepository sysRoleRepository;
 
     @Resource
-    AuthService authService;
+    private ISysMenuRepository sysMenuRepository;
 
     @Resource
-    ISysMenuRepository sysMenuRepo;
+    private ISysRoleMenuRepository sysRoleMenuRepository;
 
     @Resource
     TestConfig testConfig;
@@ -88,9 +94,7 @@ public class HelloController {
         System.out.println("httpRequest.getRemoteAddr() = " + httpRequest.getRemoteAddr());
         System.out.println("Account = "+ request.getAccount());
         System.out.println("testConfig.getTestName() = " + testConfig.getTestName());
-        log.info("aaa");
 
-        authService.test(request.getAccount());
         String account = request.getAccount();
         String platformName ="demo";
 //        List<SysMenu> sysMenuList = sysMenuRepo.findUserMenuList(account,platformName);
@@ -287,5 +291,30 @@ public class HelloController {
                 HttpStatus.OK.getReasonPhrase(),
                 "刪除成功"
         ), HttpStatus.OK);
+    }
+
+    @GetMapping("g/ng4")
+    public String  getNg4() throws Exception {
+        System.out.println("444");
+        Optional<SysRole> sysRoleOptional = sysRoleRepository.findByNid("USER");
+        System.out.println("sysRoleOptional = " + sysRoleOptional);
+        if(sysRoleOptional.isEmpty()){
+            return "沒USER" ;
+        }
+        //要給USER 賦予菜單 nid = 我的訂單
+        SysRole sysRole = sysRoleOptional.get();
+        //找出nid = 我的訂單 的 子菜單與父菜單
+        List<SysMenu> sysMenuList =  sysMenuRepository.findMenusByParentIdForNid("我的訂單");
+        for (SysMenu sysMenu :sysMenuList) {
+            // 創建 SysRoleMenu 關聯
+            SysRoleMenu sysRoleMenu = new SysRoleMenu();
+            sysRoleMenu.setSysRole(sysRole);  // 設定角色
+            sysRoleMenu.setSysMenu(sysMenu);  // 設定菜單
+            sysRoleMenu.setRemark("AUTO");  // 可選的備註
+            // 儲存關聯
+            sysRoleMenuRepository.save(sysRoleMenu);
+        }
+
+        return "OKOKOKOK" ;
     }
 }

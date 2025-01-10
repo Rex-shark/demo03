@@ -3,8 +3,9 @@ package com.example.demoservice.repository;
 
 
 import com.example.demoservice.entity.SysMenu;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,4 +26,12 @@ public interface ISysMenuRepository extends JpaRepository<SysMenu, Long> {
 //    List<SysMenu> findUserMenuList(String account,String platformName);
 
     List<SysMenu> findByStatus(Integer status);
+
+
+    List<SysMenu> findByNid(String nid);
+
+    @Query("SELECT sm FROM SysMenu sm WHERE sm.parentId = (SELECT m.id FROM SysMenu m WHERE m.nid = :nid)"
+            + " or sm.nid = :nid")
+    List<SysMenu> findMenusByParentIdForNid(@Param("nid") String nid);
+
 }

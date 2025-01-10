@@ -1,4 +1,4 @@
-select * from order_demo01;
+select * from order_demo;
 
 ALTER TABLE user_base AUTO_INCREMENT = 1;
 ALTER TABLE sys_role AUTO_INCREMENT = 1;
@@ -9,8 +9,9 @@ ALTER TABLE Sys_Menu AUTO_INCREMENT = 1;
 select * from user_base;
 select * from sys_role;
 select * from Sys_User_Role;
-select * from Sys_Role_Menu;
 select * from Sys_Menu;
+select * from Sys_Role_Menu;
+
 
 DROP TABLE user_base;
 DROP TABLE sys_role;
@@ -27,3 +28,11 @@ FROM User_Base ub
 
 
 select * from order_demo;-- order1 67586bd9-9afc-4f47-8c78-d31a5876cd79
+select * from product_demo;
+
+-- 找菜單 , USER 只能看到 我的訂單 與其底下的
+
+select * from Sys_Menu where
+                           parent_id = ( select id from Sys_Menu where nid = '我的訂單'  )
+                            or nid = '我的訂單' ;
+;

@@ -42,5 +42,4 @@ cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW
 
 
 ###
-GET http://localhost:8080/hello/g/delete-user?
-    account=admin
+GET http://localhost:8080/hello/g/ng4

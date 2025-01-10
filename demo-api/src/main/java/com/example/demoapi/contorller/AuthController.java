@@ -7,15 +7,19 @@ import com.example.demoapi.response.WebResponse;
 
 
 import com.example.demoapi.utils.JWTUtils;
+import com.example.demoservice.entity.UserBase;
+import com.example.demoservice.service.service.AuthService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -26,17 +30,26 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     @Resource
-    JWTUtils jwtUtils;
+    private AuthService authService;
+
+    @Resource
+    private JWTUtils jwtUtils;
+
+    @Value("${jwt.access-token-minute}")
+    private int accessTokenMinute;
+
+    @Value("${jwt.refresh-token-minute}")
+    private int  refreshTokenMinute;
 
 
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request , HttpServletRequest httpRequest)  {
 
-        //先驗證 帳號密碼
-        boolean flag = request.getAccount().equals("admin")&&request.getPassword().equals("123456"); //驗證帳號密碼
 
-        if(!flag){
+        UserBase userBase = authService.authenticate(request.getAccount(),request.getPassword());
+
+        if(userBase == null){
             return new ResponseEntity<>(new WebResponse(
                     HttpStatus.BAD_REQUEST.value(),
                     HttpStatus.BAD_REQUEST.getReasonPhrase(),
@@ -48,13 +61,12 @@ public class AuthController {
         String accessToken = "";
         String refreshToken = "";
 
-        accessToken = jwtUtils.generateToken(request.getAccount(),1L,120);
-        refreshToken = jwtUtils.generateToken(request.getAccount(),1L,1200);
+        accessToken = jwtUtils.generateToken(request.getAccount(),1L,accessTokenMinute,null);
+        refreshToken = jwtUtils.generateToken(request.getAccount(),1L, refreshTokenMinute,null);
         jwtResponse.setStatus(true);
-        jwtResponse.setAccessToken( accessToken);
-        jwtResponse.setRefreshToken( refreshToken);
+        jwtResponse.setAccessToken(accessToken);
+        jwtResponse.setRefreshToken(refreshToken);
         jwtResponse.setAccount(request.getAccount());
-
 
         System.out.println("jwtResponse.toString() = " + jwtResponse.toString());
         return new ResponseEntity<>(new WebResponse(
@@ -105,8 +117,8 @@ public class AuthController {
         JWTResponse jwtResponse = new JWTResponse();
         jwtResponse.setStatus(true);
 
-        String newAccessToken = jwtUtils.generateToken(refreshJwtAccount,1L,120);
-        String newRefreshAccessToken = jwtUtils.generateToken(refreshJwtAccount,1L,120);
+        String newAccessToken = jwtUtils.generateToken(refreshJwtAccount,1L,120,null);
+        String newRefreshAccessToken = jwtUtils.generateToken(refreshJwtAccount,1L,120,null);
         jwtResponse.setAccessToken( newAccessToken);
         jwtResponse.setRefreshToken(newRefreshAccessToken);
         jwtResponse.setAccount(refreshJwtAccount);

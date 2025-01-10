@@ -1,0 +1,10 @@
+### 查訂單
+GET http://localhost:8080/test/entity
+
+###
+POST http://localhost:8080/test/entity
+Content-Type: application/json
+
+{
+  "orderName": "滑鼠"
+}

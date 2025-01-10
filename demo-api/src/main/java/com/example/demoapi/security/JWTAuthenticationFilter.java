@@ -54,13 +54,11 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 String token = jwtUtils.extractToken(authHeader);
                 DecodedJWT decodedJWT = jwtUtils.validateToken(token);
                 String account = decodedJWT.getClaim("account").asString();
-                ArrayList<String> list = new ArrayList();
-                list.add("ADMIN");
 
                 if (account != null) {
                     System.out.println("account = " + account);
-                    UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(account);
-                    System.out.println("userDetails = " + userDetails);
+//                    UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(account);
+//                    System.out.println("userDetails = " + userDetails);
 
                     List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
                     List<GrantedAuthority> authorities = roles.stream()

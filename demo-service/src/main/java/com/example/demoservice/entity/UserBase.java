@@ -1,25 +1,33 @@
 package com.example.demoservice.entity;
 
+import com.example.demoservice.entity.base.AbstractEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "user_base")
 @Data
-public class UserBase {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class UserBase extends AbstractEntity {
 
-    @Column(columnDefinition = "varchar(100) COMMENT '登入帳號'", unique = true)
+    @NotBlank(message = "uuid is mandatory")
+    @Size(min = 36, max = 36, message = "uuid size is 36")
+    @Column(updatable = false, nullable = false, length = 36, unique = true , columnDefinition = "VARCHAR(36) COMMENT 'uuid'")
+    private String uuid;
+
+    @Column(updatable = false, nullable = false, length = 100, unique = true ,columnDefinition = "varchar(100) COMMENT '登入帳號'")
     private String account;
 
-    @Column(columnDefinition = " varchar(100) COMMENT '登入密碼'")
+    @Column(nullable = false, length = 100, columnDefinition = "VARCHAR(100) COMMENT '登入密碼'")
     private String password;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -30,13 +38,6 @@ public class UserBase {
     @LastModifiedDate
     private LocalDateTime lastLogout;
 
-    @Column(nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    private LocalDateTime updatedAt;
-
-
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "sys_user_role",
@@ -44,4 +45,12 @@ public class UserBase {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<SysRole> roles = new HashSet<>();
+
+    @PrePersist
+    private void initPrePersist() {
+        super.init();
+        if (this.uuid == null) {
+            this.uuid = UUID.randomUUID().toString();  // 生成 UUID
+        }
+    }
 }

@@ -1,0 +1,9 @@
+###新增 商品
+POST http://localhost:8080/product
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNjQ2NTcxOCwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2MzkzNzE4fQ.eEcSU5UXtswGga8pERcXikSH1W3H03bR9RP4JvYSCoA
+
+{
+  "productName": "鍵盤",
+  "price": 100
+}

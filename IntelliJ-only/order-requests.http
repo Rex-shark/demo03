@@ -1,27 +1,26 @@
 ### 查訂單
 GET http://localhost:8080/order
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNjQ2NTE2MywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2MzkzMTYzfQ.TlYgtwm3CzV9-BPvxQGe_TZBKwTCPQyYGU8RyC0tzrU
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTc0MzY3MTc0MywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2NDcxNzQzfQ.u7fniH9FWWVUljyJPH7hyZ7ikg35TGGJQVojHwPjk_o
 
 ###新增order
 POST http://localhost:8080/order
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNjQ2NTcxOCwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2MzkzNzE4fQ.eEcSU5UXtswGga8pERcXikSH1W3H03bR9RP4JvYSCoA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTc0MzY3MTc0MywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2NDcxNzQzfQ.u7fniH9FWWVUljyJPH7hyZ7ikg35TGGJQVojHwPjk_o
 
 {
-  "orderName": "訂單3"
+  "orderName": "訂單2"
 }
 
 
 ###改訂單
-PUT http://localhost:8080/order/63c281a1-d4ff-40a6-8ce6-8727fb1923b5
+PUT http://localhost:8080/order/4547dfef-d41d-401c-b386-f0e29e9bf47c
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNjQ2NTcxOCwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2MzkzNzE4fQ.eEcSU5UXtswGga8pERcXikSH1W3H03bR9RP4JvYSCoA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTc0MzY3MTc0MywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2NDcxNzQzfQ.u7fniH9FWWVUljyJPH7hyZ7ikg35TGGJQVojHwPjk_o
 
 {
-  "uuid": "63c281a1-d4ff-40a6-8ce6-8727fb1923b5",
-  "orderName": "{{$random.alphanumeric(8)}}"
+  "uuid": "4547dfef-d41d-401c-b386-f0e29e9bf47c",
+  "orderName": "{{$random.alphanumeric(5)}}"
 }
 
 ###刪除訂單

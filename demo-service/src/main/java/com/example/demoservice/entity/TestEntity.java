@@ -1,25 +1,21 @@
 package com.example.demoservice.entity;
 
 import com.example.demoservice.entity.base.AbstractEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-
 import lombok.EqualsAndHashCode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
 import java.util.UUID;
-
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "order_demo")
 @Data
 @EntityListeners(AuditingEntityListener.class)
-public class OrderDemo  extends AbstractEntity {
+public class TestEntity extends AbstractEntity {
 
     @NotBlank(message = "uuid is mandatory")
     @Size(min = 36, max = 36, message = "uuid size is 36")
