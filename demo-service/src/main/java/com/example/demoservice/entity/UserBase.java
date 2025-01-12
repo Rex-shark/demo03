@@ -1,6 +1,7 @@
 package com.example.demoservice.entity;
 
 import com.example.demoservice.entity.base.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -9,9 +10,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -38,13 +37,15 @@ public class UserBase extends AbstractEntity {
     @LastModifiedDate
     private LocalDateTime lastLogout;
 
+    //注意FetchType.EAGER
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "sys_user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<SysRole> roles = new HashSet<>();
+    @JsonManagedReference
+    private List<SysRole> roles = new ArrayList<>();
 
     @PrePersist
     private void initPrePersist() {

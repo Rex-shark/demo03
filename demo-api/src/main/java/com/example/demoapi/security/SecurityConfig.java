@@ -35,7 +35,9 @@ public class SecurityConfig {
                                         "/error/**",
                                         "/auth/**",
                                         "/hello/**",
-                                        "/test/**"
+                                        "/test/**",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**"
                                 ).permitAll()
                                 .requestMatchers("/api/**").hasRole("ADMIN") // 設定 /api/** 需要 ADMIN 權限
                                 // 其他路徑需要認證

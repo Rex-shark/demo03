@@ -1,0 +1,19 @@
+###login 取得token
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "account": "admin",
+  "password": "123456",
+  "code": "1234"
+}
+
+###refresh
+POST http://localhost:8080/auth/refresh
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzM5MTk1MywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2NjcxOTUzfQ.9JfHB9qXKWBA6ZIN6HPdoupjz36XETjESlMUmuutsNk
+cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTc0Mzg3MTk1MywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2NjcxOTUzfQ.jgj2AOAgAvFWJDrQDAVl4rEfkeHUtPzGNLUDaOYo1XI
+
+{
+  "account": "admin"
+}

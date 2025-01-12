@@ -2,16 +2,23 @@ package com.example.demoservice.entity;
 
 import com.example.demoservice.entity.base.AbstractEntity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @Entity(name = "SysRole")
 @Table(name = "sys_role")
 public class SysRole extends AbstractEntity {
@@ -31,8 +38,9 @@ public class SysRole extends AbstractEntity {
     private String remark;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY , cascade = CascadeType.ALL)
-    private Set<UserBase> users = new HashSet<>(); // 具有該角色的用戶集合
+    @JsonIgnore
+    private List<UserBase> users = new ArrayList<>(); // 具有該角色的用戶集合
 
     @OneToMany(mappedBy = "sysRole", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<SysRoleMenu> sysRoleMenus = new HashSet<>(); // 該角色所擁有的菜單集合
+    private List<SysRoleMenu> sysRoleMenus = new ArrayList<>(); // 該角色所擁有的菜單集合
 }

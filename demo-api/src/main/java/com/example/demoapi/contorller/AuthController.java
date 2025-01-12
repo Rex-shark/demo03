@@ -2,13 +2,14 @@ package com.example.demoapi.contorller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demoapi.request.LoginRequest;
+import com.example.demoapi.request.TokenRefreshRequest;
 import com.example.demoapi.response.JWTResponse;
 import com.example.demoapi.response.WebResponse;
 
 
 import com.example.demoapi.utils.JWTUtils;
 import com.example.demoservice.entity.UserBase;
-import com.example.demoservice.service.service.AuthService;
+import com.example.demoapi.service.AuthService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,9 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -46,7 +44,6 @@ public class AuthController {
     @ResponseBody
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request , HttpServletRequest httpRequest)  {
 
-
         UserBase userBase = authService.authenticate(request.getAccount(),request.getPassword());
 
         if(userBase == null){
@@ -61,8 +58,9 @@ public class AuthController {
         String accessToken = "";
         String refreshToken = "";
 
-        accessToken = jwtUtils.generateToken(request.getAccount(),1L,accessTokenMinute,null);
-        refreshToken = jwtUtils.generateToken(request.getAccount(),1L, refreshTokenMinute,null);
+        accessToken = authService.generateJwtToken(userBase,accessTokenMinute);
+        refreshToken = authService.generateJwtToken(userBase,refreshTokenMinute);
+
         jwtResponse.setStatus(true);
         jwtResponse.setAccessToken(accessToken);
         jwtResponse.setRefreshToken(refreshToken);
@@ -77,10 +75,10 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshAccessToken(@RequestBody String account
+    public ResponseEntity<?> refreshAccessToken(@RequestBody TokenRefreshRequest tokenRefreshRequest
     ,@RequestHeader("Authorization") String authHeader
     ,HttpServletRequest request) {
-        System.out.println("account = " + account);
+        System.out.println("tokenRefreshRequest = " + tokenRefreshRequest);
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             return new ResponseEntity<>(new WebResponse(
@@ -99,13 +97,12 @@ public class AuthController {
 
         String headerToken = jwtUtils.extractToken(authHeader);
 
-        System.out.println("headerToken = " + headerToken);
-        System.out.println("refreshToken = " + refreshToken);
-
         DecodedJWT headerJwt = jwtUtils.validateToken(headerToken);
         DecodedJWT refreshJwt = jwtUtils.validateToken(refreshToken);
 
         String refreshJwtAccount = refreshJwt.getClaim("account").asString();
+        String account = tokenRefreshRequest.getAccount();
+
         if(!refreshJwtAccount.equals(account)){
             return new ResponseEntity<>(new WebResponse(
                     HttpStatus.UNAUTHORIZED.value(),
@@ -117,8 +114,12 @@ public class AuthController {
         JWTResponse jwtResponse = new JWTResponse();
         jwtResponse.setStatus(true);
 
-        String newAccessToken = jwtUtils.generateToken(refreshJwtAccount,1L,120,null);
-        String newRefreshAccessToken = jwtUtils.generateToken(refreshJwtAccount,1L,120,null);
+        int num = refreshJwt.getClaim("num").asInt();
+        String role = refreshJwt.getClaim("role").asString();
+
+        String newAccessToken = jwtUtils.generateToken(refreshJwtAccount, (long) num,accessTokenMinute,role);
+        String newRefreshAccessToken = jwtUtils.generateToken(refreshJwtAccount,(long) num,refreshTokenMinute,role);
+
         jwtResponse.setAccessToken( newAccessToken);
         jwtResponse.setRefreshToken(newRefreshAccessToken);
         jwtResponse.setAccount(refreshJwtAccount);

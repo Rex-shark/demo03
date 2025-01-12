@@ -44,7 +44,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        System.out.println("path = " + path);
+        System.out.println("doFilterInternal path = " + path);
 
 
         // 如果不是，則執行 JWT 驗證
