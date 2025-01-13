@@ -13,6 +13,7 @@ import com.example.demoapi.service.AuthService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +43,8 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request , HttpServletRequest httpRequest)  {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request , HttpServletRequest httpRequest
+    , HttpServletResponse response)  {
 
         UserBase userBase = authService.authenticate(request.getAccount(),request.getPassword());
 
@@ -63,10 +65,22 @@ public class AuthController {
 
         jwtResponse.setStatus(true);
         jwtResponse.setAccessToken(accessToken);
-        jwtResponse.setRefreshToken(refreshToken);
+        //jwtResponse.setRefreshToken(refreshToken);
         jwtResponse.setAccount(request.getAccount());
 
         System.out.println("jwtResponse.toString() = " + jwtResponse.toString());
+
+        //TODO 不確定RefreshToken 該放哪邊
+        // 創建 HttpOnly Cookie
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        refreshCookie.setHttpOnly(true);       // 無法通過 JavaScript 訪問
+        refreshCookie.setSecure(false);         // 僅在 HTTPS 下傳輸
+        refreshCookie.setPath("/");            // 設置作用域為整個應用
+        refreshCookie.setMaxAge(refreshTokenMinute/60); // 設置過期時間 單位秒
+
+        // 將 Cookie 添加到響應中
+        response.addCookie(refreshCookie);
+
         return new ResponseEntity<>(new WebResponse(
                 HttpStatus.OK.value(),
                 HttpStatus.OK.getReasonPhrase(),
@@ -77,9 +91,11 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestBody TokenRefreshRequest tokenRefreshRequest
     ,@RequestHeader("Authorization") String authHeader
-    ,HttpServletRequest request) {
+    ,HttpServletRequest request
+    ,HttpServletResponse response) {
         System.out.println("tokenRefreshRequest = " + tokenRefreshRequest);
         Cookie[] cookies = request.getCookies();
+
         if (cookies == null) {
             return new ResponseEntity<>(new WebResponse(
                     HttpStatus.UNAUTHORIZED.value(),
@@ -121,8 +137,19 @@ public class AuthController {
         String newRefreshAccessToken = jwtUtils.generateToken(refreshJwtAccount,(long) num,refreshTokenMinute,role);
 
         jwtResponse.setAccessToken( newAccessToken);
-        jwtResponse.setRefreshToken(newRefreshAccessToken);
+        //jwtResponse.setRefreshToken(newRefreshAccessToken);
         jwtResponse.setAccount(refreshJwtAccount);
+
+        //TODO 不確定RefreshToken 該放哪邊
+        // 創建 HttpOnly Cookie
+        Cookie refreshCookie = new Cookie("refreshToken", newRefreshAccessToken);
+        refreshCookie.setHttpOnly(true);       // 無法通過 JavaScript 訪問
+        refreshCookie.setSecure(false);         // 僅在 HTTPS 下傳輸
+        refreshCookie.setPath("/");            // 設置作用域為整個應用
+        refreshCookie.setMaxAge(refreshTokenMinute/60); // 設置過期時間 單位秒
+
+        // 將 Cookie 添加到響應中
+        response.addCookie(refreshCookie);
 
         return new ResponseEntity<>(new WebResponse(
                 HttpStatus.OK.value(),
