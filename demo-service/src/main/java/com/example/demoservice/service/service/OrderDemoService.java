@@ -3,14 +3,15 @@ package com.example.demoservice.service.service;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demoservice.entity.OrderDemo;
 import com.example.demoservice.repository.IOrderDemoRepository;
-import com.example.demoservice.util.ReflectionUtils;
+import com.example.demoservice.utils.ReflectionUtils;
 import jakarta.annotation.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,5 +80,11 @@ public class OrderDemoService {
     // 刪除訂單
     public void deleteOrderByUuid(String uuid) {
 
+    }
+
+
+    public Page<OrderDemo> getOrders(int page, int size,  int status) {
+        Pageable pageable = PageRequest.of(page, size);
+        return orderDemoRepository.findByStatus(status, pageable);
     }
 }

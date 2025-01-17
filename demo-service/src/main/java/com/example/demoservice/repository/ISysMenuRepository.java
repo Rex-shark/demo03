@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ISysMenuRepository extends JpaRepository<SysMenu, Long> {
@@ -28,7 +29,7 @@ public interface ISysMenuRepository extends JpaRepository<SysMenu, Long> {
     List<SysMenu> findByStatus(Integer status);
 
 
-    List<SysMenu> findByNid(String nid);
+    Optional<SysMenu> findByNid(String nid);
 
     @Query("SELECT sm FROM SysMenu sm WHERE sm.parentId = (SELECT m.id FROM SysMenu m WHERE m.nid = :nid)"
             + " or sm.nid = :nid")

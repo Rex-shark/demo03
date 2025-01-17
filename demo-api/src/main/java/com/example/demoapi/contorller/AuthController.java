@@ -1,13 +1,13 @@
 package com.example.demoapi.contorller;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.demoapi.request.LoginRequest;
-import com.example.demoapi.request.TokenRefreshRequest;
+import com.example.demoservice.request.LoginRequest;
+import com.example.demoservice.request.TokenRefreshRequest;
 import com.example.demoapi.response.JWTResponse;
 import com.example.demoapi.response.WebResponse;
 
 
-import com.example.demoapi.utils.JWTUtils;
+import com.example.demoservice.utils.JWTUtils;
 import com.example.demoservice.entity.UserBase;
 import com.example.demoapi.service.AuthService;
 import jakarta.annotation.Resource;
@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.NoSuchAlgorithmException;
 
 
 @Slf4j
@@ -63,23 +65,20 @@ public class AuthController {
         accessToken = authService.generateJwtToken(userBase,accessTokenMinute);
         refreshToken = authService.generateJwtToken(userBase,refreshTokenMinute);
 
+        try {
+            //新增一組 有IP跟瀏覽器的版本
+            String testToken = jwtUtils.generateToken(userBase,15000,httpRequest);
+            System.out.println("testToken = " + testToken);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
         jwtResponse.setStatus(true);
         jwtResponse.setAccessToken(accessToken);
-        //jwtResponse.setRefreshToken(refreshToken);
+        jwtResponse.setRefreshToken(refreshToken);
         jwtResponse.setAccount(request.getAccount());
 
         System.out.println("jwtResponse.toString() = " + jwtResponse.toString());
-
-        //TODO 不確定RefreshToken 該放哪邊
-        // 創建 HttpOnly Cookie
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setHttpOnly(true);       // 無法通過 JavaScript 訪問
-        refreshCookie.setSecure(false);         // 僅在 HTTPS 下傳輸
-        refreshCookie.setPath("/");            // 設置作用域為整個應用
-        refreshCookie.setMaxAge(refreshTokenMinute/60); // 設置過期時間 單位秒
-
-        // 將 Cookie 添加到響應中
-        response.addCookie(refreshCookie);
 
         return new ResponseEntity<>(new WebResponse(
                 HttpStatus.OK.value(),
@@ -88,6 +87,11 @@ public class AuthController {
         ), HttpStatus.OK);
     }
 
+    /**
+     * 更新憑證 初版(沒用，當範例)
+     * 設計有refreshToken跟AccessToken兩種token
+     *
+     */
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestBody TokenRefreshRequest tokenRefreshRequest
     ,@RequestHeader("Authorization") String authHeader
@@ -155,6 +159,33 @@ public class AuthController {
                 HttpStatus.OK.value(),
                 HttpStatus.OK.getReasonPhrase(),
                 jwtResponse.toString()
+        ), HttpStatus.OK);
+    }
+
+    /*
+    未完成
+     */
+    @PostMapping("/v2/refresh")
+    public ResponseEntity<?> refreshAccessTokenVer2(@RequestBody TokenRefreshRequest tokenRefreshRequest
+            ,@RequestHeader("Authorization") String authHeader
+            ,HttpServletRequest request
+            ,HttpServletResponse response) {
+        String headerToken = jwtUtils.extractToken(authHeader);
+        DecodedJWT headerJwt = jwtUtils.validateToken(headerToken);
+        boolean valid ;
+
+        try {
+            valid = authService.validateTokenRefreshRequest(headerJwt,request);
+        } catch (NoSuchAlgorithmException e) {
+            //TODO
+            throw new RuntimeException(e);
+        }
+
+
+        return new ResponseEntity<>(new WebResponse(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.getReasonPhrase(),
+               "OK"
         ), HttpStatus.OK);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.demoservice.util;
+package com.example.demoservice.utils;
 
 import java.lang.reflect.Field;
 

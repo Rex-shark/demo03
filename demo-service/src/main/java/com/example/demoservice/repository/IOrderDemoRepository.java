@@ -1,6 +1,8 @@
 package com.example.demoservice.repository;
 
 import com.example.demoservice.entity.OrderDemo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,4 +14,6 @@ public interface IOrderDemoRepository extends JpaRepository<OrderDemo, Long> {
     // List<OrderDemo> findByOrderName(String orderName);
 
     Optional<OrderDemo> findByUuid(String uuid);
+
+    Page<OrderDemo> findByStatus(Integer status, Pageable pageable);
 }

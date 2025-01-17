@@ -3,10 +3,10 @@ package com.example.demoapi.contorller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.demoapi.config.TestConfig;
 
-import com.example.demoapi.request.LoginRequest;
+import com.example.demoservice.request.LoginRequest;
 import com.example.demoapi.response.WebResponse;
 
-import com.example.demoapi.utils.JWTUtils;
+import com.example.demoservice.utils.JWTUtils;
 import com.example.demoservice.entity.SysMenu;
 
 import com.example.demoservice.entity.SysRole;

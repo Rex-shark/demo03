@@ -1,6 +1,7 @@
 package com.example.demoservice.entity;
 
 import com.example.demoservice.entity.base.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -26,18 +27,21 @@ public class UserBase extends AbstractEntity {
     @Column(updatable = false, nullable = false, length = 100, unique = true ,columnDefinition = "varchar(100) COMMENT '登入帳號'")
     private String account;
 
+    @JsonIgnore
     @Column(nullable = false, length = 100, columnDefinition = "VARCHAR(100) COMMENT '登入密碼'")
     private String password;
 
+    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private LocalDateTime lastLogin;
 
+    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private LocalDateTime lastLogout;
 
-    //注意FetchType.EAGER
+    //注意FetchType
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "sys_user_role",

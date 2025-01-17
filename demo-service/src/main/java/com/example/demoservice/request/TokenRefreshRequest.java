@@ -1,4 +1,4 @@
-package com.example.demoapi.request;
+package com.example.demoservice.request;
 
 import lombok.Data;
 

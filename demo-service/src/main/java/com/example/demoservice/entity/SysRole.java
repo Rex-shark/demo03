@@ -4,6 +4,7 @@ import com.example.demoservice.entity.base.AbstractEntity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,9 +39,11 @@ public class SysRole extends AbstractEntity {
     private String remark;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    @JsonBackReference
     @JsonIgnore
     private List<UserBase> users = new ArrayList<>(); // 具有該角色的用戶集合
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "sysRole", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SysRoleMenu> sysRoleMenus = new ArrayList<>(); // 該角色所擁有的菜單集合
 }

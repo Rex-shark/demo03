@@ -1,5 +1,6 @@
 package com.example.demoservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class SysRoleMenu implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "sys_role_id", nullable = false)
     private SysRole sysRole; // 角色

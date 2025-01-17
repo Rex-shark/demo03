@@ -1,0 +1,72 @@
+### 查USER - page
+GET http://localhost:8080/api/user?
+    page=0&
+    size=3
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+
+### 查USER - uuid
+GET http://localhost:8080/api/user/a69c2118-574e-4d97-a382-1ab893f610e4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+
+### 改user
+PUT http://localhost:8080/api/user/a69c2118-574e-4d97-a382-1ab893f610e4
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+
+{
+  "uuid": "a69c2118-574e-4d97-a382-1ab893f610e4",
+  "account": "12345678s",
+  "password": "12345678",
+  "sysRole": ["USER","USER1"]
+}
+
+
+### 查角色 sys-role
+GET http://localhost:8080/api/sys-role?
+    page=0&
+    size=10
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+
+{
+  "nid": "USER",
+  "sysRoleName": "",
+  "status": "1",
+  "remark": "{{$random.alphanumeric(5)}}"
+}
+
+
+### 查角色 sys-role nid
+GET http://localhost:8080/api/sys-role/USER7
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+
+
+### 新增角色 sys-role nid
+POST http://localhost:8080/api/sys-role
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+
+{
+  "nid": "USER7",
+  "sysRoleName": "一般使用者7",
+  "remark": "test",
+  "sysMenuNid": ["我的訂單","訂單查詢"]
+}
+
+
+### 改角色 sys-role nid
+PUT http://localhost:8080/api/sys-role/USER
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+
+{
+  "nid": "USER",
+  "sysRoleName": "一般使用者",
+  "status": 1,
+  "remark": "test"
+}
+
+

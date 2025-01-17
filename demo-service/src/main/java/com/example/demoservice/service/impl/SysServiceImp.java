@@ -52,6 +52,24 @@ public class SysServiceImp implements ISysService {
         sysRole.setStatus(1);
         sysRole.setCreatedUserId(1L);
         sysRoleRepository.save(sysRole);
+
+        //新增角色 一般使用者 CRUD用
+        sysRole = new SysRole();
+        sysRole.setId(3L);
+        sysRole.setName("一般使用者1");
+        sysRole.setNid("USER1");
+        sysRole.setStatus(1);
+        sysRole.setCreatedUserId(1L);
+        sysRoleRepository.save(sysRole);
+
+        //新增角色 一般使用者 CRUD用
+        sysRole = new SysRole();
+        sysRole.setId(4L);
+        sysRole.setName("一般使用者2");
+        sysRole.setNid("USER2");
+        sysRole.setStatus(1);
+        sysRole.setCreatedUserId(1L);
+        sysRoleRepository.save(sysRole);
     }
 
     @Override
@@ -101,7 +119,6 @@ public class SysServiceImp implements ISysService {
         sysMenu.setRemark("AUTO");
         sysMenu.setPlatformName("DEMO");
         sysMenu.setParentId(0L);//父
-        sysMenuRepository.save(sysMenu);
         long pid = sysMenuRepository.saveAndFlush(sysMenu).getId();
 
         sysMenu = new SysMenu();
@@ -127,8 +144,6 @@ public class SysServiceImp implements ISysService {
         sysMenu.setRemark("AUTO");
         sysMenu.setPlatformName("DEMO");
         sysMenu.setParentId(0L);//父
-        sysMenuRepository.save(sysMenu);
-
         pid = sysMenuRepository.saveAndFlush(sysMenu).getId();
 
         sysMenu = new SysMenu();
@@ -156,8 +171,6 @@ public class SysServiceImp implements ISysService {
         sysMenu.setRemark("AUTO");
         sysMenu.setPlatformName("DEMO");
         sysMenu.setParentId(0L);//父
-        sysMenuRepository.save(sysMenu);
-
         pid = sysMenuRepository.saveAndFlush(sysMenu).getId();
 
         sysMenu = new SysMenu();

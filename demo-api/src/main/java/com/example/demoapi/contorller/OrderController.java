@@ -5,6 +5,7 @@ import com.example.demoservice.service.service.OrderDemoService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +38,18 @@ public class OrderController {
         for (OrderDemo order : orders) {
             System.out.println("orders.get(i).getCreatedAt() = " + order.getCreatedAt());
         }
+        return new ResponseEntity<>(orders, HttpStatus.OK);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<OrderDemo>> getOrders(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        System.out.println("查詢訂單 - 分頁與條件");
+        Page<OrderDemo> orders = orderDemoService.getOrders(page, size,1);
+        orders.forEach(System.out::println);
+
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 

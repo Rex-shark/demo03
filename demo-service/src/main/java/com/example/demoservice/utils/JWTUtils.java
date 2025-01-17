@@ -1,4 +1,4 @@
-package com.example.demoapi.utils;
+package com.example.demoservice.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -7,9 +7,12 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.example.demoservice.entity.SysRole;
 import com.example.demoservice.entity.UserBase;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,6 +21,9 @@ import java.util.Date;
 
 @Component
 public class JWTUtils {
+
+    @Resource
+    private  Utils utils;
 
     private final Algorithm algorithm;
 
@@ -62,6 +68,37 @@ public class JWTUtils {
                 .withClaim("account", userBase.getAccount())
                 .withClaim("num", userBase.getId())
                 .withClaim("roles",roleList)
+                .withExpiresAt(expireTime)
+                .withIssuer(issuer)
+                .withIssuedAt(Instant.now())
+                .sign(algorithm);
+        return token;
+    }
+
+    /*
+     暫定版本，有傳入HttpServletRequest，需要抓一些Request參數放入token，作為安全性驗證
+     */
+    public  String generateToken(UserBase userBase, int minute , HttpServletRequest request) throws NoSuchAlgorithmException {
+
+        //userBase 抓權限
+        ArrayList<String> roleList = new ArrayList<>();
+        for (SysRole role : userBase.getRoles()) {
+            roleList.add(role.getNid());
+        }
+
+        String clientIp = utils.getIpAddress(request);
+        String userAgent = request.getHeader("User-Agent");
+        String token = "";
+
+        LocalDateTime dateTime = LocalDateTime.now().plusMinutes(minute);
+        Date expireTime = Date.from(dateTime.atZone(ZoneId.systemDefault()).toInstant());
+
+        token = JWT.create()
+                .withClaim("account", userBase.getAccount())
+                .withClaim("num", userBase.getId())//可能要加密或改用uuid
+                .withClaim("roles",roleList)
+                .withClaim("ip",utils.hashWithMD5(clientIp))
+                .withClaim("agent",utils.hashWithMD5(userAgent))
                 .withExpiresAt(expireTime)
                 .withIssuer(issuer)
                 .withIssuedAt(Instant.now())

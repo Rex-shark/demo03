@@ -1,16 +1,18 @@
-package com.example.demoapi.request;
+package com.example.demoservice.request.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonPropertyOrder({"account","password"})
-public class LoginRequest {
+public class UserBaseRequest {
     @JsonProperty("account")
     @NotBlank(message = "Account is mandatory")
     @Size(min = 1, max = 20, message = "Account must be between 1 and 20 characters")
@@ -21,7 +23,12 @@ public class LoginRequest {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
-    @JsonProperty("code")
-    @NotBlank(message = "code is mandatory")
-    private String code;
+    @NotBlank(message = "uuid is mandatory")
+    @Size(min = 36, max = 36, message = "uuid size is 36")
+    private String uuid;
+
+    private List<String> sysRole ;
+
+
 }
+

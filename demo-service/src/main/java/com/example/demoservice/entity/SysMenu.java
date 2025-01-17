@@ -1,6 +1,7 @@
 package com.example.demoservice.entity;
 
 import com.example.demoservice.entity.base.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
