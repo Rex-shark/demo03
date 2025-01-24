@@ -31,6 +31,9 @@ public class UserBase extends AbstractEntity {
     @Column(nullable = false, length = 100, columnDefinition = "VARCHAR(100) COMMENT '登入密碼'")
     private String password;
 
+    @Column(columnDefinition = " varchar(255) COMMENT '備註'")
+    private String remark;
+
     @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate

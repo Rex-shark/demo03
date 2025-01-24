@@ -1,0 +1,47 @@
+### 查角色 sys-role
+GET http://localhost:8080/api/sys-role?
+    page=0&size=10
+    &nid=
+    &sysRoleName=
+    &status=1
+    &remark={{$random.alphanumeric(5)}}
+Authorization: Bearer {{bearer-admin}}
+
+
+### 查角色 sys-role nid
+GET http://localhost:8080/api/sys-role/USER3
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}
+
+### 新增角色 sys-role nid
+POST http://localhost:8080/api/sys-role
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}
+
+{
+  "nid": "USER3",
+  "sysRoleName": "一般使用者3",
+  "remark": "test",
+  "sysMenuNid": ["我的訂單","訂單查詢"]
+}
+
+
+### 修改角色 sys-role nid
+PUT http://localhost:8080/api/sys-role/USER
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}
+
+{
+  "nid": "USER3",
+  "sysRoleName": "一般使用者3",
+  "remark": "test33",
+  "sysMenuNid": ["我的訂單","訂單查詢","自訂選單-1"],
+  "status": 1
+}
+
+### 刪除角色 sys-role nid
+DELETE http://localhost:8080/api/sys-role/USER3
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}
+
+

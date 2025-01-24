@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonPropertyOrder({"account","password"})
-public class LoginRequest {
+public class AuthRequest {
     @JsonProperty("account")
     @NotBlank(message = "Account is mandatory")
     @Size(min = 1, max = 20, message = "Account must be between 1 and 20 characters")
@@ -24,4 +24,7 @@ public class LoginRequest {
     @JsonProperty("code")
     @NotBlank(message = "code is mandatory")
     private String code;
+
+    @JsonProperty("accessToken")
+    private String accessToken;
 }

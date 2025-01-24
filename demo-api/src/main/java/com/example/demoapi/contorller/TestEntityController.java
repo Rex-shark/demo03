@@ -1,18 +1,14 @@
 package com.example.demoapi.contorller;
 
-import com.example.demoservice.entity.OrderDemo;
 import com.example.demoservice.entity.TestEntity;
 import com.example.demoservice.repository.ITestEntityRepository;
-import com.example.demoservice.service.service.OrderDemoService;
 import jakarta.annotation.Resource;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
@@ -22,6 +18,8 @@ public class TestEntityController {
 
     @Resource
     ITestEntityRepository testEntityRepository;
+
+
 
     // 查詢所有訂單
     @GetMapping

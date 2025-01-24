@@ -1,0 +1,4 @@
+###rex
+GET http://localhost:8080/hello/g/demo1?account=a&password=123
+Content-Type: application/json
+

@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
 @EnableJpaAuditing
 @SpringBootApplication
 //@EntityScan(basePackages = "com.example.demoservice.model")
@@ -25,6 +24,7 @@ public class DemoApiApplication {
         System.out.println("DemoApiApplication ok");
 
     }
+    //TODO 這個bean不知道為什麼放在這邊，但是他能正常工作。待研究
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

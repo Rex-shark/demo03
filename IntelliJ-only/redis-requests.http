@@ -1,0 +1,31 @@
+### 白名單 查單一白名單 {帳號}
+GET http://localhost:8080/redis/white-list/admin
+Authorization: Bearer {{bearer-admin-new-refresh}}
+
+### 白名單 查全部白名單-list
+GET http://localhost:8080/redis/white-list
+Authorization: Bearer {{bearer-admin}}
+
+### 黑名單 查單一黑名單 {jti}
+GET http://localhost:8080/redis/black-list/{{jti-admin}}
+Authorization: Bearer {{bearer-admin}}
+
+### 黑名單 查全部黑名單-list
+GET http://localhost:8080/redis/black-list
+Authorization: Bearer {{bearer-admin}}
+
+### 通用 查詢 get
+GET http://localhost:8080/redis/jwt:white-list:admin
+Authorization: Bearer {{bearer-admin}}
+
+### 通用 改資料 PUT
+PUT http://localhost:8080/redis/AA?
+    val=val-a&
+    time=100
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}
+
+### 通用 刪除
+DELETE http://localhost:8080/redis/jwt:black-list:ab224335-16c9-44aa-ac6a-537351d1b17a
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}

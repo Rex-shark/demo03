@@ -1,22 +1,21 @@
 package com.example.demoapi;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.example.demoservice.constant.ApiMessageEnum;
+import com.example.demoapi.response.ApiDataResponse;
 import com.example.demoapi.response.WebResponse;
+import com.example.demoservice.exception.CRUDException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -50,7 +49,8 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex , HandlerMethod handlerMethod) {
+        //TODO handlerMethod 的資訊可以考慮紀錄Log
 
         List<String> errorMessages = ex.getBindingResult().getFieldErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
@@ -67,10 +67,35 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TokenExpiredException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED) // HTTP 401 未授權
     public ResponseEntity<?> handleTokenExpiredException(TokenExpiredException ex, HandlerMethod handlerMethod) {
+        System.out.println("\"自訂 handle攔截\" = " + "自訂 handle攔截");
+
         return new ResponseEntity<>(new WebResponse(
                 HttpStatus.UNAUTHORIZED.value(),
                 HttpStatus.UNAUTHORIZED.getReasonPhrase(),
                 "JWT token is expired"
         ), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException ex, HandlerMethod handlerMethod) {
+        System.out.println("自訂 handle攔截 這好像用不到");
+        return new ResponseEntity<>(new WebResponse(
+                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NOT_FOUND.getReasonPhrase(),
+                ex.getMessage()
+        ), HttpStatus.OK);
+    }
+
+    /*
+        自訂Exception
+     */
+    @ExceptionHandler(CRUDException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> CRUDException(CRUDException ex, HandlerMethod handlerMethod) {
+        String message = ex.getMessage();
+        ApiMessageEnum e = ex.getApiMessageEnum();
+
+        return new ResponseEntity<>(new ApiDataResponse<>(e,message), HttpStatus.OK);
     }
 }

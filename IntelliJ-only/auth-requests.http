@@ -3,17 +3,45 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "account": "user1",
+  "account": "admin",
   "password": "123456",
   "code": "1234"
+}
+
+###登出
+POST http://localhost:8080/auth/logout
+Content-Type: application/json
+
+{
+  "account": "admin",
+  "accessToken" : "{{bearer-admin}}"
+}
+
+###登出2 測試用
+POST http://localhost:8080/auth/logout2
+Content-Type: application/json
+
+{
+  "account": "user",
+  "accessToken" : "{{bearer-user-time-out}}"
+}
+
+###自訂JWT
+POST http://localhost:8080/auth/build-jwt
+Content-Type: application/json
+
+{
+  "account": "admin",
+  "id": 1,
+  "time": 1,
+  "sysRole": ["ADMIN"]
 }
 
 ###refresh
 POST http://localhost:8080/auth/refresh
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTc0MzkzMDgwMywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2NzMwODAzfQ.rwEV5Asc5GgXdzj49Npn1P-3xzsn_RlNlsN_L74a1u0
-Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTc0MzkzMDgwMywiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2NzMwODAzfQ.rwEV5Asc5GgXdzj49Npn1P-3xzsn_RlNlsN_L74a1u0
 
 {
-  "account": "admin"
+  "account": "admin",
+  "accessToken": "{{bearer-admin}}"
 }

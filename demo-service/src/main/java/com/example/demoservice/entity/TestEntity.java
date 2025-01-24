@@ -11,6 +11,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.UUID;
 
+/**
+ * 練專專用Entity
+ * 可隨意修改
+ */
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
@@ -34,4 +38,13 @@ public class TestEntity extends AbstractEntity {
             this.uuid = UUID.randomUUID().toString();  // 生成 UUID
         }
     }
+
+    /*
+        annotation 範例區
+     */
+
+    @Transient
+    private String tempField; // 不會對應到資料表的欄位
+
+
 }

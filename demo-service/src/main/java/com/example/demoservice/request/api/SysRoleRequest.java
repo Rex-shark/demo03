@@ -1,11 +1,10 @@
-package com.example.demoservice.request.user;
+package com.example.demoservice.request.api;
 
 
 import lombok.AllArgsConstructor;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;

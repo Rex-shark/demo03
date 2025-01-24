@@ -4,6 +4,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * 不知道目前有什麼實際應用，放著當範例
+ */
 @Component
 @ConfigurationProperties(prefix = "test")
 @Data

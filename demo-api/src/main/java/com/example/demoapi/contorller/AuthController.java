@@ -1,17 +1,31 @@
 package com.example.demoapi.contorller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.demoservice.request.LoginRequest;
-import com.example.demoservice.request.TokenRefreshRequest;
-import com.example.demoapi.response.JWTResponse;
-import com.example.demoapi.response.WebResponse;
+import com.auth0.jwt.interfaces.JWTVerifier;
+import com.example.demoapi.response.ApiDataResponse;
+import com.example.demoservice.constant.ApiMessageEnum;
+import com.example.demoservice.entity.SysRole;
+import com.example.demoservice.model.JWTModel;
+import com.example.demoservice.repository.ISysRoleRepository;
+import com.example.demoservice.request.AuthRequest;
 
 
-import com.example.demoservice.utils.JWTUtils;
+import com.example.demoservice.service.service.JWTService;
+import com.example.demoservice.service.service.RedisService;
+
 import com.example.demoservice.entity.UserBase;
 import com.example.demoapi.service.AuthService;
+import com.example.demoservice.utils.CommonUtils;
+
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -22,8 +36,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-
+@Tag(name = "A.授權登入Controller",description = "登入登出與取得刷新Token")
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
@@ -34,158 +50,258 @@ public class AuthController {
     private AuthService authService;
 
     @Resource
-    private JWTUtils jwtUtils;
+    private RedisService redisService;
+
+    @Resource
+    private JWTService jwtService;
+
+    @Resource
+    private ISysRoleRepository sysRoleRepository;
 
     @Value("${jwt.access-token-minute}")
     private int accessTokenMinute;
 
     @Value("${jwt.refresh-token-minute}")
-    private int  refreshTokenMinute;
+    private int refreshTokenMinute;
 
-
+    @Operation(summary = "登入",description = "輸入帳密，取得Token。目前沒有圖形驗證。")
+    @ApiResponses({
+            //TODO 研究如何通用簡化
+            @ApiResponse(responseCode="200",description="正常"),
+            @ApiResponse(responseCode="404",description="找不到路徑")
+    })
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request , HttpServletRequest httpRequest
-    , HttpServletResponse response)  {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest request, HttpServletResponse response)  {
 
+        System.out.println("CommonUtils.getRequest() = " + CommonUtils.getRequest());
+
+        //TODO 要做圖形驗證碼 驗 request.getCode()
         UserBase userBase = authService.authenticate(request.getAccount(),request.getPassword());
 
         if(userBase == null){
-            return new ResponseEntity<>(new WebResponse(
-                    HttpStatus.BAD_REQUEST.value(),
-                    HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                    "帳號密碼 錯誤"
-            ), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ApiDataResponse<>(ApiMessageEnum.AUTH_FAIL,"帳號密碼錯誤"), HttpStatus.OK);
         }
 
-        JWTResponse jwtResponse = new JWTResponse();
-        String accessToken = "";
-        String refreshToken = "";
-
-        accessToken = authService.generateJwtToken(userBase,accessTokenMinute);
-        refreshToken = authService.generateJwtToken(userBase,refreshTokenMinute);
+        JWTModel jwtModel ;
+        String account = request.getAccount();
 
         try {
-            //新增一組 有IP跟瀏覽器的版本
-            String testToken = jwtUtils.generateToken(userBase,15000,httpRequest);
-            System.out.println("testToken = " + testToken);
+            jwtModel = authService.generateJWTModel(userBase,accessTokenMinute);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            //應該不太可能觸發這邊
+            return new ResponseEntity<>(new ApiDataResponse<>(ApiMessageEnum.AUTH_FAIL,"MD5 error"), HttpStatus.OK);
         }
 
-        jwtResponse.setStatus(true);
-        jwtResponse.setAccessToken(accessToken);
-        jwtResponse.setRefreshToken(refreshToken);
-        jwtResponse.setAccount(request.getAccount());
+        //加入白單
+        redisService.addToWhiteList(account , String.valueOf(jwtModel.getIssuedAt()));
 
-        System.out.println("jwtResponse.toString() = " + jwtResponse.toString());
 
-        return new ResponseEntity<>(new WebResponse(
-                HttpStatus.OK.value(),
-                HttpStatus.OK.getReasonPhrase(),
-                jwtResponse.toString()
-        ), HttpStatus.OK);
-    }
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("accessToken", jwtModel.getToken());
+        responseMap.put("jti", jwtModel.getJit());
+        responseMap.put("account", account );
 
-    /**
-     * 更新憑證 初版(沒用，當範例)
-     * 設計有refreshToken跟AccessToken兩種token
-     *
-     */
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refreshAccessToken(@RequestBody TokenRefreshRequest tokenRefreshRequest
-    ,@RequestHeader("Authorization") String authHeader
-    ,HttpServletRequest request
-    ,HttpServletResponse response) {
-        System.out.println("tokenRefreshRequest = " + tokenRefreshRequest);
-        Cookie[] cookies = request.getCookies();
+        return new ResponseEntity<>(new ApiDataResponse<>(responseMap,ApiMessageEnum.AUTH_SUCCESS), HttpStatus.OK);
 
-        if (cookies == null) {
-            return new ResponseEntity<>(new WebResponse(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                    "not token"
-            ), HttpStatus.UNAUTHORIZED);
-        }
-
-        String refreshToken = "";
-        for (Cookie cookie : cookies) {
-            if ("refreshToken".equals(cookie.getName())) {
-                refreshToken = cookie.getValue();
-            }
-        }
-
-        String headerToken = jwtUtils.extractToken(authHeader);
-
-        DecodedJWT headerJwt = jwtUtils.validateToken(headerToken);
-        DecodedJWT refreshJwt = jwtUtils.validateToken(refreshToken);
-
-        String refreshJwtAccount = refreshJwt.getClaim("account").asString();
-        String account = tokenRefreshRequest.getAccount();
-
-        if(!refreshJwtAccount.equals(account)){
-            return new ResponseEntity<>(new WebResponse(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                    "error token"
-            ), HttpStatus.UNAUTHORIZED);
-        }
-
-        JWTResponse jwtResponse = new JWTResponse();
-        jwtResponse.setStatus(true);
-
-        int num = refreshJwt.getClaim("num").asInt();
-        String role = refreshJwt.getClaim("role").asString();
-
-        String newAccessToken = jwtUtils.generateToken(refreshJwtAccount, (long) num,accessTokenMinute,role);
-        String newRefreshAccessToken = jwtUtils.generateToken(refreshJwtAccount,(long) num,refreshTokenMinute,role);
-
-        jwtResponse.setAccessToken( newAccessToken);
-        //jwtResponse.setRefreshToken(newRefreshAccessToken);
-        jwtResponse.setAccount(refreshJwtAccount);
-
-        //TODO 不確定RefreshToken 該放哪邊
-        // 創建 HttpOnly Cookie
-        Cookie refreshCookie = new Cookie("refreshToken", newRefreshAccessToken);
-        refreshCookie.setHttpOnly(true);       // 無法通過 JavaScript 訪問
-        refreshCookie.setSecure(false);         // 僅在 HTTPS 下傳輸
-        refreshCookie.setPath("/");            // 設置作用域為整個應用
-        refreshCookie.setMaxAge(refreshTokenMinute/60); // 設置過期時間 單位秒
-
-        // 將 Cookie 添加到響應中
-        response.addCookie(refreshCookie);
-
-        return new ResponseEntity<>(new WebResponse(
-                HttpStatus.OK.value(),
-                HttpStatus.OK.getReasonPhrase(),
-                jwtResponse.toString()
-        ), HttpStatus.OK);
     }
 
     /*
-    未完成
+        登出
+        要註銷JWT
      */
-    @PostMapping("/v2/refresh")
-    public ResponseEntity<?> refreshAccessTokenVer2(@RequestBody TokenRefreshRequest tokenRefreshRequest
-            ,@RequestHeader("Authorization") String authHeader
-            ,HttpServletRequest request
-            ,HttpServletResponse response) {
-        String headerToken = jwtUtils.extractToken(authHeader);
-        DecodedJWT headerJwt = jwtUtils.validateToken(headerToken);
-        boolean valid ;
+    @PostMapping("/logout")
+    @ResponseBody
+    public ResponseEntity<?> logout( @RequestBody AuthRequest request
+                                    , HttpServletRequest httpRequest)  {
+        //TODO request.getAccount() 沒用到，也可移除
+        System.out.println("登出 account = " + request.getAccount());
+
+
+        boolean isValidateToken = false;
+        String token = request.getAccessToken();
 
         try {
-            valid = authService.validateTokenRefreshRequest(headerJwt,request);
+            isValidateToken = authService.validateToken(token);
         } catch (NoSuchAlgorithmException e) {
-            //TODO
-            throw new RuntimeException(e);
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        if(isValidateToken){
+            DecodedJWT jwt = jwtService.validateToken(token);
+            jwt.getClaim("account").asString();
+            //加入黑名單
+            redisService.addToBlackList(jwt.getClaim("jti").asString(),"USER logout");
+            //移除白單
+            redisService.deleteWhiteList(jwt.getClaim("account").asString());
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /*
+     測試過期token
+    */
+    @Hidden
+    @PostMapping("/logout2")
+    @ResponseBody
+    public ResponseEntity<?> logout2( @RequestBody AuthRequest request
+            , HttpServletRequest httpRequest)  {
+        System.out.println("account = " + request.getAccount());
+        System.out.println("request.getAccessToken() = " + request.getAccessToken());
+
+        String token = request.getAccessToken();
+        System.out.println("token = " + token);
+        JWTVerifier verifier;
+        DecodedJWT jwt;
+
+        try {
+            verifier = jwtService.validateToken2(token);
+        } catch (JWTVerificationException e) {
+            System.out.println("AAAAB");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            System.out.println("BBBBB");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        try {
+
+            jwt =  verifier.verify(token);
+            Date exp = jwt.getExpiresAt();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // 自訂格式
+            String formattedDate = sdf.format(exp); // 格式化日期
+            System.out.println("過期時間： " + formattedDate);
+        } catch (JWTVerificationException e) {
+            //直送404
+            System.out.println("CCCCC");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }catch(Exception e){
+            System.out.println("DDDDD");
         }
 
 
-        return new ResponseEntity<>(new WebResponse(
-                HttpStatus.OK.value(),
-                HttpStatus.OK.getReasonPhrase(),
-               "OK"
-        ), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    /*
+        開發階段用，自訂JWT
+     */
+    @PostMapping("/build-jwt")
+    @ResponseBody
+    public ResponseEntity<?> buildJwt(@RequestBody Map<String, Object> requestBody
+            , HttpServletRequest httpRequest) {
+
+        String account = (String) requestBody.get("account");
+        Long id = ((Integer) requestBody.get("id")).longValue();
+        int time = (Integer) requestBody.get("time");
+        ArrayList<String> sysRoleList = (ArrayList<String>) requestBody.get("sysRole");
+
+        System.out.println("account = " + account);
+        System.out.println("id = " + id);
+        System.out.println("time = " + time);
+
+        JWTModel jwtModel ;
+        UserBase userBase = new UserBase();
+        userBase.setAccount(account);
+        userBase.setId(id);
+
+        for (String nid : sysRoleList) {
+            Optional<SysRole> SysRole = sysRoleRepository.findByNid(nid);
+            SysRole.ifPresent(sysRole -> userBase.getRoles().add(sysRole));
+        }
+
+        try {
+            jwtModel = authService.generateJWTModel(userBase,time);
+        } catch (NoSuchAlgorithmException e) {
+            //應該不太可能觸發這邊
+            return new ResponseEntity<>(new ApiDataResponse<>(ApiMessageEnum.AUTH_FAIL,"MD5 error"), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(jwtModel,HttpStatus.OK);
+    }
+
+    /**
+     * 更新憑證
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshAccessToken(@RequestBody AuthRequest authRequest
+    ,HttpServletRequest httpRequest
+    ,HttpServletResponse response) {
+        Algorithm algorithm =  Algorithm.HMAC256("demo-Key");
+        System.out.println("tokenRefreshRequest = " + authRequest);
+        System.out.println("authRequest.getAccessToken() = " + authRequest.getAccessToken());
+        String token = authRequest.getAccessToken();
+
+        System.out.println("token = " + token);
+        JWTVerifier verifier;
+        DecodedJWT jwt;
+        String account;
+        try {
+            //稍微過期也視為有效
+            verifier = JWT.require(algorithm).acceptExpiresAt(refreshTokenMinute * 60L).build();
+            jwt = verifier.verify(token);
+            account = jwt.getClaim("account").asString();
+            String jti = jwt.getClaim("jti").asString();
+
+            //TODO 這邊重複程式碼
+            //驗是否同IP、瀏覽器
+            boolean isValidateToken = authService.validateToken(jwt);
+            if(!isValidateToken ){
+                //這邊表示token被亂用 直接送403
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            System.out.println("jti = " + jti);
+
+            boolean isBlack =  redisService.isBlackListed(jti);
+            if(isBlack){
+                //在黑名單，不給refresh
+                log.info("refresh黑名單token。token={}", token);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            boolean isWhite =  redisService.isWhiteListed(account);
+            if(!isWhite){
+                //不再白名單，不給refresh
+                log.info("refresh非白單token。token={}", token);
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
+
+            //都OK 給新TOKEN
+
+        } catch(Exception e){
+            log.info("無效 refreshAccessToken。token={} message={}", token, e.getMessage(),e);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        JWTModel jwtModel ;
+        UserBase userBase = new UserBase();
+
+        try {
+
+            ArrayList<String> sysRoleNidList = (ArrayList<String>) jwt.getClaim("roles").asList(String.class);
+            userBase.setAccount(account);
+            userBase.setId((long) jwt.getClaim("num").asInt());
+            jwtModel = authService.generateJWTModel(userBase,accessTokenMinute,sysRoleNidList);
+
+        } catch (NoSuchAlgorithmException e) {
+            //應該不太可能觸發這邊
+            return new ResponseEntity<>(new ApiDataResponse<>(ApiMessageEnum.AUTH_FAIL,"MD5 error"), HttpStatus.OK);
+        }
+
+        //加入白單
+        redisService.addToWhiteList(account , String.valueOf(jwtModel.getIssuedAt()));
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("accessToken", jwtModel.getToken());
+        responseMap.put("jti", jwtModel.getJit());
+        responseMap.put("account", account );
+
+        return new ResponseEntity<>(new ApiDataResponse<>(responseMap,ApiMessageEnum.AUTH_SUCCESS), HttpStatus.OK);
+    }
+
+
 }

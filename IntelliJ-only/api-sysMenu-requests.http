@@ -1,0 +1,52 @@
+### 查菜單 sys-menu
+GET http://localhost:8080/api/sys-menu?
+    page=0&size=10
+    &nid=
+    &platformName=
+    &menuName=自訂
+    &parentId=0
+Authorization: Bearer {{bearer-admin}}
+
+### 查菜單 sys-menu nid  (我的訂單 = %E6%88%91%E7%9A%84%E8%A8%82%E5%96%AE)
+GET http://localhost:8080/api/sys-menu/%E6%88%91%E7%9A%84%E8%A8%82%E5%96%AE
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}
+
+### 新增菜單 sysMenu
+POST http://localhost:8080/api/sys-menu
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}
+
+{
+  "nid": "自訂選單-2",
+  "href": "",
+  "iconCls": "",
+  "menuName": "自訂選單-2",
+  "remark": "手動新增",
+  "platformName": "DEMO",
+  "sortNum": 1,
+  "parentId": 9,
+  "sysRoleNid": []
+}
+
+
+### 修改菜單 sys-menu nid ("nid": "自訂選單-2" = %E8%87%AA%E8%A8%82%E9%81%B8%E5%96%AE-2)
+PUT http://localhost:8080/api/sys-menu/%E8%87%AA%E8%A8%82%E9%81%B8%E5%96%AE-2
+Content-Type: application/json
+Authorization: Bearer {{bearer-admin}}
+
+{
+  "nid": "自訂選單-2",
+  "href": "",
+  "iconCls": "",
+  "menuName": "自訂選單-2",
+  "remark": "修改測試",
+  "platformName": "DEMO",
+  "sortNum": 2,
+  "parentId": 9,
+  "sysRoleNid": []
+}
+
+### 刪除菜單 sys-menu nid ("nid": "自訂選單-2" = %E8%87%AA%E8%A8%82%E9%81%B8%E5%96%AE-2)
+DELETE http://localhost:8080/api/sys-menu/%E8%87%AA%E8%A8%82%E9%81%B8%E5%96%AE-2
+Content-Type: application/json

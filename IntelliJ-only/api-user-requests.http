@@ -1,72 +1,58 @@
 ### 查USER - page
 GET http://localhost:8080/api/user?
-    page=0&
-    size=3
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+    page=0
+    &size=10
+    &uuid=
+    &account=
+    &status=1
+Authorization: Bearer {{bearer-admin}}
+
 
 ### 查USER - uuid
-GET http://localhost:8080/api/user/a69c2118-574e-4d97-a382-1ab893f610e4
+GET http://localhost:8080/api/user/f41d153a-a81f-4e07-a2a4-fc205725e623
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+Authorization: Bearer {{bearer-admin}}
 
-### 改user
-PUT http://localhost:8080/api/user/a69c2118-574e-4d97-a382-1ab893f610e4
+### 新增user
+POST http://localhost:8080/api/user
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+Authorization: Bearer {{bearer-admin}}
 
 {
-  "uuid": "a69c2118-574e-4d97-a382-1ab893f610e4",
-  "account": "12345678s",
-  "password": "12345678",
-  "sysRole": ["USER","USER1"]
+  "account": "admin2",
+  "password": "123456",
+  "remark": "建立admin",
+  "sysRole": ["ADMIN"]
 }
 
 
-### 查角色 sys-role
-GET http://localhost:8080/api/sys-role?
-    page=0&
-    size=10
+### 改user -(不含密碼)
+PUT http://localhost:8080/api/user/f41d153a-a81f-4e07-a2a4-fc205725e623
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+Authorization: Bearer {{bearer-admin}}
 
 {
-  "nid": "USER",
-  "sysRoleName": "",
-  "status": "1",
-  "remark": "{{$random.alphanumeric(5)}}"
+  "uuid": "f41d153a-a81f-4e07-a2a4-fc205725e623",
+  "password": "{{$random.alphanumeric(6)}}",
+  "remark": "修改user{{$random.alphanumeric(6)}}",
+  "sysRole": ["MERCHANTS"]
 }
 
-
-### 查角色 sys-role nid
-GET http://localhost:8080/api/sys-role/USER7
+### 改user (密碼)
+PUT http://localhost:8080/api/user/pw/f41d153a-a81f-4e07-a2a4-fc205725e623
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
-
-
-### 新增角色 sys-role nid
-POST http://localhost:8080/api/sys-role
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+Authorization: Bearer {{bearer-admin}}
 
 {
-  "nid": "USER7",
-  "sysRoleName": "一般使用者7",
-  "remark": "test",
-  "sysMenuNid": ["我的訂單","訂單查詢"]
+  "uuid": "3c63796c-b54f-4788-967d-2040ab1e6969",
+  "password": "1234567",
+  "remark": "修改密碼user{{$random.alphanumeric(6)}}"
 }
 
-
-### 改角色 sys-role nid
-PUT http://localhost:8080/api/sys-role/USER
+### 刪除使用者 uuid
+DELETE http://localhost:8080/api/user/3c63796c-b54f-4788-967d-2040ab1e6969
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50IjoiYWRtaW4iLCJudW0iOjEsInJvbGVzIjpbIkFETUlOIl0sImV4cCI6MTczNzYyNTA0MiwiaXNzIjoiand0LWRlbW8tYXBpIiwiaWF0IjoxNzM2OTA1MDQyfQ.Ty07Vkq4b-8ebWleayUHRSFOvRhZ5uwnOIa96FgrR8w
+Authorization: Bearer {{bearer-admin}}
 
-{
-  "nid": "USER",
-  "sysRoleName": "一般使用者",
-  "status": 1,
-  "remark": "test"
-}
 
 

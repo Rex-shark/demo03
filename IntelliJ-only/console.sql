@@ -12,6 +12,9 @@ select * from Sys_User_Role;
 select * from Sys_Menu;
 select * from Sys_Role_Menu;
 
+select * from Sys_User_Role where user_id = 7;
+select * from Sys_Menu where parent_id = 0;
+
 
 DROP TABLE user_base;
 DROP TABLE sys_role;
@@ -36,3 +39,13 @@ select * from Sys_Menu where
                            parent_id = ( select id from Sys_Menu where nid = '我的訂單'  )
                             or nid = '我的訂單' ;
 ;
+
+select
+    srm1_0.id,
+    srm1_0.remark,
+    srm1_0.sys_menu_id,
+    srm1_0.sys_role_id
+from
+    sys_role_menu srm1_0
+where
+    srm1_0.sys_role_id=5
