@@ -19,8 +19,9 @@
 ### 建立redis鏡像
 
 1. docker pull redis:latest
-2. docker run --name my-redis -d redis:latest
-3. docker run --name my-redis -d -p 6379:6379 -e REDIS_PASSWORD=123456 redis:latest
+2. docker run --name my-redis -d redis:latest(這是錯誤的，沒有映射埠)
+3. docker run --name my-redis -d -p 6379:6379 redis:latest
+4. docker run --name my-redis -d -p 6379:6379 -e REDIS_PASSWORD=123456 redis:latest
 
 ---
 
