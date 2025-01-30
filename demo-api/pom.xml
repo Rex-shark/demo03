@@ -8,8 +8,8 @@
         <version>Final</version>
     </parent>
 
-    <artifactId>demoapi</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>demo-api</artifactId>
+    <version>Final</version>
     <packaging>jar</packaging>
 
 
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.example</groupId>
             <artifactId>demo-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>Final</version>
         </dependency>
 
         <dependency>

@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>demo-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>Final</version>
     <packaging>jar</packaging>
 
 
@@ -39,8 +39,8 @@
 
     </dependencies>
 
+    <!--  TODO 之前遺留的。要重新測試 maven子模塊間打包的設定-->
     <build>
-
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

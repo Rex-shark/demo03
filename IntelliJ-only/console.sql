@@ -27,7 +27,7 @@ FROM User_Base ub
          LEFT JOIN Sys_User_Role sur ON ub.id = sur.user_Id
          LEFT JOIN Sys_Role sr ON sr.id = sur.role_id
          LEFT JOIN Sys_Role_Menu srm ON srm.sys_Role_Id = sr.id
-         LEFT JOIN Sys_Menu sm ON sm.id = srm.sys_Menu_Id
+         LEFT JOIN Sys_Menu sm ON sm.id = srm.sys_Menu_Id;
 
 
 select * from order_demo;-- order1 67586bd9-9afc-4f47-8c78-d31a5876cd79

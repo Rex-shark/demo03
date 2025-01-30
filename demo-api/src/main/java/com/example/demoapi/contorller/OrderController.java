@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * order 與 product 是用來練習測試用的關聯實體
+ */
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController

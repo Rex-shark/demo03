@@ -28,13 +28,10 @@ public class SqlDataCommandLineRunner implements CommandLineRunner {
     public void run(String... args) {
 
         System.out.println( "SqlDataCommandLineRunner Run! auto insert ... ");
-        //sysService.initUser();
         ISysService.iniSysRole();
         ISysService.initUser();
         ISysService.initSysMenu();
         ISysService.initSysRoleMenu();
-        //System.out.println("passwordEncoder= " + passwordEncoder.encode("aa"));
-
 
     }
 }

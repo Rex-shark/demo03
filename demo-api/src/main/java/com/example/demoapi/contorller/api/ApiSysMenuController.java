@@ -3,20 +3,14 @@ package com.example.demoapi.contorller.api;
 import com.example.demoapi.response.ApiDataResponse;
 import com.example.demoservice.constant.ApiMessageEnum;
 import com.example.demoservice.entity.SysMenu;
-import com.example.demoservice.entity.SysMenu;
-import com.example.demoservice.entity.SysMenu;
-import com.example.demoservice.entity.SysRole;
+
 import com.example.demoservice.request.api.SysMenuRequest;
-import com.example.demoservice.request.api.SysMenuRequest;
-import com.example.demoservice.request.api.SysMenuRequest;
-import com.example.demoservice.request.api.SysRoleRequest;
+
 import com.example.demoservice.service.service.SysMenuService;
-import com.example.demoservice.service.service.SysMenuService;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,8 +20,7 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+
 
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
