@@ -1,0 +1,2 @@
+###MQ 發消息
+GET http://localhost:8080/rabbitmq/send/AA

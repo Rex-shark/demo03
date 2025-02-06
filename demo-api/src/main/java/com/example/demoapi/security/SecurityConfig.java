@@ -34,6 +34,7 @@ public class SecurityConfig {
                         auth.requestMatchers(
                                         "/error/**",
                                         "/auth/**",
+                                        "/rabbitmq/**",
                                         "/hello/**",
                                         "/test/**",
                                         "/swagger-ui/**",

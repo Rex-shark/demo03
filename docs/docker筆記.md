@@ -1,5 +1,5 @@
 
-### mysql 啟動docker容器指令 持久化路徑放在D槽地版本 適用windows
+### mysql 啟動docker容器指令 持久化路徑放在D槽的版本 適用windows
 
 - docker run -itd --name mysql8_docker -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -v /d/mydata:/var/lib/mysql mysql:8.0
 
@@ -16,12 +16,20 @@
 
 ---
 
-### 建立redis鏡像
+### 建立redis鏡像與容器
 
 1. docker pull redis:latest
 2. docker run --name my-redis -d redis:latest(這是錯誤的，沒有映射埠)
 3. docker run --name my-redis -d -p 6379:6379 redis:latest
-4. docker run --name my-redis -d -p 6379:6379 -e REDIS_PASSWORD=123456 redis:latest
+4. docker run --name my-redis -d -p 6379:6379 -e REDIS_PASSWORD=123456 redis:latest(有密碼版本)
+
+---
+
+### 建立RabbitMQ鏡像與容器
+
+1. docker pull rabbitmq:3.12-management
+2. docker run -d --name rabbitmq -p 5672:5672  -p 15672:15672  -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=123456 rabbitmq:3.12-management
+3. http://localhost:15672 查看MQ
 
 ---
 

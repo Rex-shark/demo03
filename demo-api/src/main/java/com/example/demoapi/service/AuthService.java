@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+/**
+ * TODO 這個service 不確定要放在哪個模組，應該要放回service
+ */
 @Service
 public class AuthService {
     @Resource
