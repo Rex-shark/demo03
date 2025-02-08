@@ -15,6 +15,8 @@ select * from Sys_Role_Menu;
 select * from Sys_User_Role where user_id = 7;
 select * from Sys_Menu where parent_id = 0;
 
+select * from login_log;
+
 
 DROP TABLE user_base;
 DROP TABLE sys_role;

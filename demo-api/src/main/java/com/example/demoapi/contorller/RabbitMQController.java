@@ -1,17 +1,15 @@
 package com.example.demoapi.contorller;
 
 import com.example.demoservice.mq.RabbitMQProducer;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/rabbitmq")
 public class RabbitMQController {
 
-    private final RabbitMQProducer producer;
-
-    public RabbitMQController(RabbitMQProducer producer) {
-        this.producer = producer;
-    }
+    @Resource
+    private  RabbitMQProducer producer;
 
     @GetMapping("/send/{message}")
     public String sendMessage(@PathVariable String message) {

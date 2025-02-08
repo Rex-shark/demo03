@@ -9,6 +9,8 @@ import com.example.demoapi.response.ApiDataResponse;
 import com.example.demoservice.constant.ApiMessageEnum;
 import com.example.demoservice.entity.SysRole;
 import com.example.demoservice.model.JWTModel;
+import com.example.demoservice.model.LogMessageQueueModel;
+import com.example.demoservice.mq.RabbitMQProducer;
 import com.example.demoservice.repository.ISysRoleRepository;
 import com.example.demoservice.request.AuthRequest;
 
@@ -37,6 +39,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Tag(name = "A.授權登入Controller",description = "登入登出與取得刷新Token")
@@ -45,6 +49,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    @Resource
+    private RabbitMQProducer producer;
 
     @Resource
     private AuthService authService;
@@ -72,19 +79,21 @@ public class AuthController {
     })
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest request, HttpServletResponse response)  {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest
+            , HttpServletRequest httpServletRequest
+            , HttpServletResponse response)  {
 
         System.out.println("CommonUtils.getRequest() = " + CommonUtils.getRequest());
 
         //TODO 要做圖形驗證碼 驗 request.getCode()
-        UserBase userBase = authService.authenticate(request.getAccount(),request.getPassword());
+        UserBase userBase = authService.authenticate(authRequest.getAccount(),authRequest.getPassword());
 
         if(userBase == null){
             return new ResponseEntity<>(new ApiDataResponse<>(ApiMessageEnum.AUTH_FAIL,"帳號密碼錯誤"), HttpStatus.OK);
         }
 
         JWTModel jwtModel ;
-        String account = request.getAccount();
+        String account = authRequest.getAccount();
 
         try {
             jwtModel = authService.generateJWTModel(userBase,accessTokenMinute);
@@ -96,6 +105,15 @@ public class AuthController {
         //加入白單
         redisService.addToWhiteList(account , String.valueOf(jwtModel.getIssuedAt()));
 
+        LogMessageQueueModel model = new LogMessageQueueModel();
+        model.setAccount(account);
+        model.setJwt(jwtModel.getToken());
+        model.setIpAddress(CommonUtils.getIpAddress(httpServletRequest));
+        model.setType(1);
+        ZoneId taipeiZone = ZoneId.of("Asia/Taipei");
+        model.setLoginTime(Date.from(jwtModel.getIssuedAt().atZone(taipeiZone).toInstant()));
+        //TODO 序列化失敗 要修正
+       // producer.saveLoginLog(model);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("accessToken", jwtModel.getToken());
