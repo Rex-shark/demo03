@@ -83,7 +83,6 @@ public class AuthController {
             , HttpServletRequest httpServletRequest
             , HttpServletResponse response)  {
 
-        System.out.println("CommonUtils.getRequest() = " + CommonUtils.getRequest());
 
         //TODO 要做圖形驗證碼 驗 request.getCode()
         UserBase userBase = authService.authenticate(authRequest.getAccount(),authRequest.getPassword());
@@ -112,8 +111,8 @@ public class AuthController {
         model.setType(1);
         ZoneId taipeiZone = ZoneId.of("Asia/Taipei");
         model.setLoginTime(Date.from(jwtModel.getIssuedAt().atZone(taipeiZone).toInstant()));
-        //TODO 序列化失敗 要修正
-       // producer.saveLoginLog(model);
+
+        producer.saveLoginLog(model);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("accessToken", jwtModel.getToken());

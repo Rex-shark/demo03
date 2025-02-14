@@ -11,14 +11,15 @@ public class RabbitMQConsumer {
     @Resource
     private LogService logService;
 
+    @RabbitListener(queues = "${rabbitmq.queue.name.event}")
+    public void receiveEventMessage(String message) {
+        System.out.println("📥 接收 Event 消息：" + message);
+    }
+
     @RabbitListener(queues = "${rabbitmq.queue.name.log}") // 監聽佇列
-    public void receiveMessage(Object message) {
-        if (message instanceof String) {
-            System.out.println("📥 接收消息：" + message);
-        } else if (message instanceof LogMessageQueueModel) {
-            logService.saveLoginLog((LogMessageQueueModel) message);
-            System.out.println("📥 接收消息 model：" + ((LogMessageQueueModel) message).getAccount());
-        }
+    public void receiveMessage(LogMessageQueueModel message) {
+        System.out.println("📥 接收消息(LogModel)：" + message);
+        logService.saveAuthLog(message);
     }
 
 }

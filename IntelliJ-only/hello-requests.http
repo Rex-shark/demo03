@@ -2,3 +2,6 @@
 GET http://localhost:8080/hello/g/demo1?account=a&password=123
 Content-Type: application/json
 
+###eors test
+GET http://localhost:8080/hello/GDMS_AUTH_SSO.asmx/Auth?id=ppp&pwd=b󠇘󠆍󠆖󠇖󠅷󠅹󠇘󠆙󠆢󠇘󠆦󠅵󠇗󠅸
+Content-Type: application/xml

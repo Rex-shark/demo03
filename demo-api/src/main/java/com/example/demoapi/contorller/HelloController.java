@@ -126,5 +126,34 @@ public class HelloController {
     }
 
 
+    @GetMapping("GDMS_AUTH_SSO.asmx/Auth")
+    public String authTest(@RequestParam String id, @RequestParam String pwd, HttpServletRequest request) {
+        // 取得請求方的 IP
+        String clientIp = request.getRemoteAddr();
 
+        // 取得請求的完整 URL
+        String requestUrl = request.getRequestURL().toString();
+
+        // 取得 User-Agent（用戶裝置資訊）
+        String userAgent = request.getHeader("User-Agent");
+
+        // 取得 Referer（從哪個頁面來的）
+        String referer = request.getHeader("Referer");
+
+        // 印出請求資訊
+        System.out.println("🔹 ID：" + id);
+        System.out.println("🔹 PWD：" + pwd);
+        System.out.println("🔹 發送者 IP：" + clientIp);
+        System.out.println("🔹 請求網址：" + requestUrl);
+        System.out.println("🔹 User-Agent：" + userAgent);
+        System.out.println("🔹 來源網址：" + (referer != null ? referer : "無"));
+
+        return "✅ 認證測試成功！\n" +
+                "🔹 ID：" + id + "\n" +
+                "🔹 PWD：" + pwd + "\n" +
+                "🔹 發送者 IP：" + clientIp + "\n" +
+                "🔹 請求網址：" + requestUrl + "\n" +
+                "🔹 User-Agent：" + userAgent + "\n" +
+                "🔹 來源網址：" + (referer != null ? referer : "無");
+    }
 }

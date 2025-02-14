@@ -2,6 +2,8 @@
 ### mysql 啟動docker容器指令 持久化路徑放在D槽的版本 適用windows
 
 - docker run -itd --name mysql8_docker -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -v /d/mydata:/var/lib/mysql mysql:8.0
+- UTC+8時區版本
+- docker run -itd --name mysql8_UTC8 -e MYSQL_ROOT_PASSWORD=123456 -e TZ=Asia/Taipei -p 3306:3306 -v /d/mydata:/var/lib/mysql mysql:8.0
 
 ### mysql 啟動docker容器指令 持久化路徑放在~/mydata 適用nac
 

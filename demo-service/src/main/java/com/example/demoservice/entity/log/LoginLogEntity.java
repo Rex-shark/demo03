@@ -30,10 +30,10 @@ public class LoginLogEntity extends AbstractEntity {
         super.init();
     }
 
-    @Column(updatable = false, length = 100, unique = true ,columnDefinition = "varchar(100) COMMENT '登入帳號'")
+    @Column(updatable = false, length = 100, unique = false ,columnDefinition = "varchar(100) COMMENT '登入帳號'")
     private String account;
 
-    @Column(unique = false)
+    @Column(unique = false,columnDefinition = "TEXT")
     private String jwt;
 
     private Integer type;

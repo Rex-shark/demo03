@@ -12,16 +12,19 @@ public class RabbitMQProducer {
     @Resource
     private  RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.queue.name.log}") // 從 application.properties 讀取佇列名稱
+    @Value("${rabbitmq.queue.name.log}")
     private String logQueueName;
 
-    public void saveLoginLog(LogMessageQueueModel model) {
-        System.out.println("📤 發送消息 紀錄login");
-        rabbitTemplate.convertAndSend(logQueueName, model);
-    }
+    @Value("${rabbitmq.queue.name.event}")
+    private String eventQueueName;
 
     public void sendMessage(String message) {
-        System.out.println("📤 發送消息：" + message);
-        rabbitTemplate.convertAndSend(logQueueName, message);
+        System.out.println("📤 sendMessage 發送消息：" + message);
+        rabbitTemplate.convertAndSend(eventQueueName, message);
+    }
+
+    public void saveLoginLog(LogMessageQueueModel model) {
+        System.out.println("📤 saveLoginLog 發送消息 紀錄login");
+        rabbitTemplate.convertAndSend(logQueueName, model);
     }
 }

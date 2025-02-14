@@ -14,8 +14,8 @@ public class LogService {
     @Resource
     ILoginLogRepository loginLogRepository;
 
-    public void saveLoginLog(LogMessageQueueModel model) {
-        System.out.println("saveLoginLog " + "save");
-        //loginLogRepository.save(new LoginLogEntity(model));
+    public void saveAuthLog(LogMessageQueueModel model) {
+        System.out.println("saveAuthLog " + "save");
+        loginLogRepository.save(new LoginLogEntity(model));
     }
 }
