@@ -1,2 +1,12 @@
 ###MQ 發消息
-GET http://localhost:8080/rabbitmq/send/b󠇘󠆍󠆖󠇖󠅷󠅹󠇘󠆙󠆢󠇘󠆦󠅵󠇗󠅸󠆭
+GET http://localhost:8080/rabbitmq/send/AA
+
+###MQ 發消息
+POST http://localhost:8080/rabbitmq/send
+Content-Type: application/json
+
+{
+  "account": "admin",
+  "password": "123456",
+  "code": "1234"
+}
