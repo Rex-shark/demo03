@@ -1,7 +1,8 @@
-package com.example.demoservice.repository.jpa_n1;
+package com.example.demoservicejpa.repository;
 
 
-import com.example.demoservice.entity.jpa_n1.Child;
+
+import com.example.demoservicejpa.entity.Child;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,7 @@ import java.util.List;
 @Repository
 public interface IChildRepository extends JpaRepository<Child, Long> {
 
-    @EntityGraph(attributePaths = { "courses","n1Info"})
+    @EntityGraph(attributePaths = { "courses","userInfo"})
     @Query("SELECT c FROM Child c")
     List<Child> findAllWithCourses();
 

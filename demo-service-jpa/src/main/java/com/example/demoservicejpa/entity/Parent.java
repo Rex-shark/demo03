@@ -1,13 +1,12 @@
-package com.example.demoservice.entity.jpa_n1;
+package com.example.demoservicejpa.entity;
 
-import com.example.demoservice.entity.base.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -22,7 +21,7 @@ public class Parent extends AbstractEntity {
 
     @JsonManagedReference//父
     @OneToOne(mappedBy = "parent")  // 設定反向關聯
-    private N1Info n1Info;
+    private UserInfo userInfo;
 
     @Override
     public String toString() {
@@ -30,8 +29,12 @@ public class Parent extends AbstractEntity {
                 "id=" + getId() +
                 ", name='" + name + '\'' +
                 ", childrenCount=" + (children != null ? children.size() : 0) +
-                ", n1InfoId=" + (n1Info != null ? n1Info.getId() : "null") +
+                ", userInfoId=" + (userInfo != null ? userInfo.getId() : "null") +
                 '}';
     }
 
+    @PrePersist
+    private void initPrePersist() {
+        super.init();
+    }
 }

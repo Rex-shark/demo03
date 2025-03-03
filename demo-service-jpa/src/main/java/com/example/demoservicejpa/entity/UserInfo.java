@@ -1,16 +1,14 @@
-package com.example.demoservice.entity.jpa_n1;
+package com.example.demoservicejpa.entity;
 
-import com.example.demoservice.entity.base.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 @Entity
-@Table(name = "n1_info")
+@Table(name = "user_info")
 @Data
-public class N1Info  {
+public class UserInfo {
     @Id
     @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +25,5 @@ public class N1Info  {
     @OneToOne(fetch = FetchType.LAZY)  // 與 child 建立一對一關聯
     @JoinColumn(name = "child_id")  // 指定外鍵
     private Child child;
+
 }

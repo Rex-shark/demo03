@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @SpringBootApplication
 //@EntityScan(basePackages = "com.example.demoservice.model")
 //@EnableJpaRepositories(basePackages = "com.example.demoservice.repository")
+
 public class DemoApiApplication {
 
     public static void main(String[] args) {

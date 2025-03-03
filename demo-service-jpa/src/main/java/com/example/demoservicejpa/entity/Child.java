@@ -1,6 +1,5 @@
-package com.example.demoservice.entity.jpa_n1;
+package com.example.demoservicejpa.entity;
 
-import com.example.demoservice.entity.base.AbstractEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -23,7 +22,7 @@ public class Child extends AbstractEntity {
 
     @JsonManagedReference//父
     @OneToOne(mappedBy = "child")  // 設定反向關聯
-    private N1Info n1Info;
+    private UserInfo userInfo;
 
     @JsonManagedReference//父
     @ManyToMany(fetch = FetchType.LAZY)
@@ -33,4 +32,9 @@ public class Child extends AbstractEntity {
             inverseJoinColumns = @JoinColumn(name = "course_id")
     )
     private List<Course> courses;
+
+    @PrePersist
+    private void initPrePersist() {
+        super.init();
+    }
 }

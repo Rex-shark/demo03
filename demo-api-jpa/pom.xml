@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>com.example</groupId>
-            <artifactId>demo-service</artifactId>
+            <artifactId>demo-service-jpa</artifactId>
             <version>Final</version>
 <!--            <scope>compile</scope>-->
         </dependency>
