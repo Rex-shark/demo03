@@ -44,6 +44,7 @@
     </dependencies>
 
     <!--  TODO 之前遺留的。要重新測試 maven子模塊間打包的設定-->
+    <!--  TODO service 沒有這個 把包會找不到package 需要研究-->
     <build>
         <resources>
             <resource>
