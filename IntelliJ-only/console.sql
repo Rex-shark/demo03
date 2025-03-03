@@ -50,4 +50,15 @@ select
 from
     sys_role_menu srm1_0
 where
-    srm1_0.sys_role_id=5
+    srm1_0.sys_role_id=5;
+
+
+
+-- N+1
+SELECT * from parent;
+SELECT * from child;
+SELECT * from n1_info;
+SELECT * from course;
+SELECT * from child_course;
+
+

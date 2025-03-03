@@ -43,8 +43,8 @@ public class TestEntity extends AbstractEntity {
         annotation 範例區
      */
 
-    @Transient
-    private String tempField; // 不會對應到資料表的欄位
+    @Transient  // 不會對應到資料表的欄位
+    private String tempField;
 
 
 }

@@ -1,0 +1,8 @@
+###rex
+GET http://localhost:8080/test/n1
+Content-Type: application/json
+
+
+###rex
+GET http://localhost:8080/test/n1/test
+Content-Type: application/json

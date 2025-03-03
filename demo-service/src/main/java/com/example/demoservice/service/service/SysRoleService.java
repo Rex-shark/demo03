@@ -12,6 +12,7 @@ import com.example.demoservice.request.api.SysRoleRequest;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,7 @@ public class SysRoleService {
     @Resource
     private AuthenticationHelper authenticationHelper;
 
-    @Resource
+    @PersistenceContext
     private EntityManager entityManager;
 
 

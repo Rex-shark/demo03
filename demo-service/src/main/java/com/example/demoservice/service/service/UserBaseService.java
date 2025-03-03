@@ -10,6 +10,7 @@ import com.example.demoservice.request.api.UserBaseRequest;
 import jakarta.annotation.Resource;
 import jakarta.persistence.EntityManager;
 
+import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;
 
 import org.springframework.data.domain.Pageable;
@@ -37,7 +38,7 @@ public class UserBaseService {
     @Resource
     private AuthenticationHelper authenticationHelper;
 
-    @Resource
+    @PersistenceContext
     private EntityManager entityManager;
 
     public Page<UserBase> getAllBySearch(UserBaseRequest userBaseRequest, Pageable pageable) {
@@ -81,7 +82,6 @@ public class UserBaseService {
             throw new CRUDException("使用者 uuid: " + uuid + " 不存在", ApiMessageEnum.DEL_FAIL);
         }
     }
-
 
     public UserBase updateUserBaseByUuid(String uuid , UserBaseRequest userBaseRequest) {
 
