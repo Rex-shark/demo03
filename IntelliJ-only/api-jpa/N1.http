@@ -1,4 +1,9 @@
 
 ###rex
+GET http://localhost:8081/n1
+Content-Type: application/json
+
+
+###rex
 GET http://localhost:8081/n1/test
 Content-Type: application/json

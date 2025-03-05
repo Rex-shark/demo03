@@ -16,7 +16,7 @@ public interface IParentRepository extends JpaRepository<Parent, Long> {
     @Query("SELECT p FROM Parent p")
     List<Parent> findAllWithChildren();
 
-    //這樣只查一次
+    //這樣只查一次 Repository 會做join
     @EntityGraph(attributePaths = { "userInfo","children","children.userInfo"})
     @Query("SELECT p FROM Parent p")
     List<Parent> findAllWithChildrenAndN1Info();
