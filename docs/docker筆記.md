@@ -53,6 +53,17 @@
 
 ---
 
+###  建立Java container (windows 指定宿主機D槽)
+-  docker run -d -p 8030:8030 --name demo-api-c -v /d/demo_log:/app/springboot_log demo-api-i
+
 ###  建立Java container (~路徑應該是MAC版，待確認)
 - docker run -d -p {網址要連的port}:{application.properties指定的port} --name {container名稱} -v {~/tmp4log:/springboot} {image名稱}
 - docker run -d -p 8030:8030 --name test-api-c -v ~/tmp4log:/app/springboot test-api-i
+
+---
+
+### 找內部IP
+- docker inspect demo-api-c | Select-String "IPAddress"
+
+### 去容器內部 (demo-api-c)
+- docker exec -it demo-api-c sh
