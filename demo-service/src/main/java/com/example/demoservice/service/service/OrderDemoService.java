@@ -45,7 +45,16 @@ public class OrderDemoService {
         return null;  // 或可以拋出自定義異常
     }
 
-    // 更新訂單
+    /**
+     * 更新指定 UUID 的訂單資訊。
+     * <p>
+     * 此方法會根據傳入的 UUID 查找訂單，然後使用 `ReflectionUtils.copyNonNullProperties`
+     * 方法來更新非空屬性，並記錄更新者的 ID。
+     * @param uuid      訂單的唯一識別碼
+     * @param orderDemo 包含更新資料的訂單物件
+     * @return 更新後的 `OrderDemo` 物件，若找不到訂單則回傳 `null`
+     * @throws IllegalAccessException 可能會在反射操作時拋出
+     */
     public OrderDemo updateOrderByUuid(String uuid, OrderDemo orderDemo) throws IllegalAccessException {
         System.out.println("orderDemo.getOrderName() = " + orderDemo.getOrderName());
         System.out.println("uuid = " + uuid);
