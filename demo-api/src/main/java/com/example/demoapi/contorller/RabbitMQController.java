@@ -2,10 +2,12 @@ package com.example.demoapi.contorller;
 
 import com.example.demoservice.mq.RabbitMQProducer;
 import com.example.demoservice.request.AuthRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "3.柱列",description = "rabbitmq 柱列")
 @RestController
 @RequestMapping("/rabbitmq")
 public class RabbitMQController {

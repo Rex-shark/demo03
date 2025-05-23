@@ -37,6 +37,7 @@ public class SecurityConfig {
                                         "/rabbitmq/**",
                                         "/hello/**",
                                         "/test/**",
+                                        "/product/**",
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**"
                                 ).permitAll()

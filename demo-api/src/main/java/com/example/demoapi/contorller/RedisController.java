@@ -3,6 +3,7 @@ package com.example.demoapi.contorller;
 import com.example.demoservice.entity.UserBase;
 import com.example.demoservice.service.service.RedisService;
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@Hidden
+@Tag(name = "2.Redis",description = "Redis 操作")
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController

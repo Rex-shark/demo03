@@ -67,6 +67,13 @@ public class ApiSysRoleController {
 
     }
 
+    /**
+     * Updates a system role based on the provided NID.
+     *
+     * @param nid The unique identifier of the role to be updated
+     * @param sysRoleRequest The request body containing the updated role information
+     * @return ResponseEntity containing the updated SysRole object wrapped in ApiDataResponse with a success message and HTTP status OK
+     */
     @PutMapping("/{nid}")
     public ResponseEntity<ApiDataResponse<?>> updateSysRoleByNid(@PathVariable String nid,
                                            @Valid @RequestBody SysRoleRequest sysRoleRequest){
@@ -75,6 +82,7 @@ public class ApiSysRoleController {
 
         return new ResponseEntity<>(new ApiDataResponse<>(sysRole,ApiMessageEnum.UPD_SUCCESS), HttpStatus.OK);
     }
+
 
     @DeleteMapping("/{nid}")
     public ResponseEntity<ApiDataResponse<?>> deleteSysRoleByNid(@PathVariable String nid) {

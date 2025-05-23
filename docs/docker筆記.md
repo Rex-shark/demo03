@@ -50,6 +50,7 @@
 ###  建立Java image 將jar與dockerfile放置同資料夾
 - docker build -t image名稱 .
 - docker build -t test-api-i .
+- docker build -t demo-api-i .
 
 ---
 

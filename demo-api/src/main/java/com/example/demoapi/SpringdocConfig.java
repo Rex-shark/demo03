@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class SpringdocConfig {
     @Bean
     public OpenAPI baseOpenAPI(){
-        final String securitySchemeName = "Authorization";
+        final String securitySchemeName = "請填入jwt";
         return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(

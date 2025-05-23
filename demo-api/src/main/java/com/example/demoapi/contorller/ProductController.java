@@ -4,6 +4,7 @@ import com.example.demoservice.entity.OrderDemo;
 import com.example.demoservice.entity.ProductDemo;
 import com.example.demoservice.service.service.OrderDemoService;
 import com.example.demoservice.service.service.ProductDemoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.Optional;
 /**
  * order 與 product 是用來練習測試用的關聯實體
  */
+@Tag(name = "4.商品",description = "商品相關API")
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"}) // 允許來自 Angular 前端的跨域請求
 @RestController

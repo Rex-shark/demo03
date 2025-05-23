@@ -21,6 +21,7 @@ public class ApiDataResponse<T> {
         this.data = null;
     }
 
+    //TODO 這種設計應該是錯誤，導致swagger無法正確顯示
     public ApiDataResponse( ApiMessageEnum e ,String message) {
         this.isOk = e.getIsOk();
         this.code = e.getCode();
@@ -32,10 +33,8 @@ public class ApiDataResponse<T> {
         this.isOk = e.getIsOk();
         this.code = e.getCode();
         this.message =  e.getMessage();
+        this.data = singleObject;
 
-        Map<String, Object> dataMap = new HashMap<>();
-        dataMap.put("data", singleObject);
-        this.data = dataMap;
     }
 
     @JsonProperty("isOk")
@@ -45,5 +44,5 @@ public class ApiDataResponse<T> {
     @JsonProperty("message")
     private String message;
     @JsonProperty("data")
-    private Map<String, Object> data;
+    private T data;
 }

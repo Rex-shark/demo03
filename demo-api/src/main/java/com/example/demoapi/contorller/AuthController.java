@@ -43,7 +43,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
-@Tag(name = "A.授權登入Controller",description = "登入登出與取得刷新Token")
+@Tag(name = "1.授權登入",description = "登入登出與取得刷新Token")
 @Slf4j
 @CrossOrigin(origins = {"http://localhost:4200"})
 @RestController
@@ -79,7 +79,7 @@ public class AuthController {
     })
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity<?> login(@Valid @RequestBody AuthRequest authRequest
+    public ResponseEntity<ApiDataResponse<?>> login(@Valid @RequestBody AuthRequest authRequest
             , HttpServletRequest httpServletRequest
             , HttpServletResponse response)  {
 
