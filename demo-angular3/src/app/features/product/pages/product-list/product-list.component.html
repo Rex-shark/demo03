@@ -1,0 +1,20 @@
+<a href="/home">Go to home</a>
+<div class="product-list-page">
+  <h2>產品清單</h2>
+  <table class="product-table">
+    <thead>
+    <tr>
+      <th>名稱</th>
+      <th>價格</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for(product of products; track product.id){
+        <tr>
+          <td>{{ product.productName }}</td>
+          <td>{{ product.price }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
