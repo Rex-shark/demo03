@@ -1,10 +1,13 @@
 
-- 切換到模組底下(ex:demo-angular) 新增元件
+- 切換到模組底下(ex:demo-angular) 新增元件 (idea可改用UI)
   - ng g component rex-01
-- 切換到模組底下(ex:demo-angular) 新增服務
+- 切換到模組底下(ex:demo-angular) 新增服務 (idea可改用UI)
   - ng g service rex-date
 ---
 - 查版本 照順序查
   - node -v
   - npm -v
   - ng version
+---
+- 安裝bootstrap
+  - npm install bootstrap

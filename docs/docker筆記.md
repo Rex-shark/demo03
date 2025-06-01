@@ -68,3 +68,5 @@
 
 ### 去容器內部 (demo-api-c)
 - docker exec -it demo-api-c sh
+
+### docker alias 待研究

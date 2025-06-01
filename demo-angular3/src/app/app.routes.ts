@@ -3,9 +3,9 @@ import {ProductListComponent} from './features/product/pages/product-list/produc
 
 export const routes: Routes = [
 
-  // 配置 Product 頁面路由
+  // // 配置 Product 頁面路由
   {
-    path: '',
+    path: 'product-list',
     component: ProductListComponent,
   }
 
