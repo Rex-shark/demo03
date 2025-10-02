@@ -23,7 +23,9 @@
 1. docker pull redis:latest
 2. docker run --name my-redis -d redis:latest(這是錯誤的，沒有映射埠)
 3. docker run --name my-redis -d -p 6379:6379 redis:latest
-4. docker run --name my-redis -d -p 6379:6379 -e REDIS_PASSWORD=123456 redis:latest(有密碼版本)
+4. docker run --name my-redis -d -p 6379:6379 -e REDIS_PASSWORD=123456 redis:latest(有密碼版本，官方版本似乎無效改成下面的)
+5. docker run --name my-redis -d -p 6379:6379 redis:latest redis-server --requirepass 123456(有密碼版本，帳號名稱預設default)
+
 
 ---
 
