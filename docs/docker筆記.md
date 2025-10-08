@@ -1,3 +1,7 @@
+### WSL 啟動失敗狀況排除
+- 用系統管理員身分開啟powershell後輸入命令
+- Get-Service vmcompute | Restart-Service
+
 
 ### mysql 啟動docker容器指令 持久化路徑放在D槽的版本 適用windows
 
